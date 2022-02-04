@@ -6,6 +6,7 @@ import { getConnectionOptions } from 'typeorm';
 import config from './common/configs/app.config';
 import { GlobalExceptionFilter } from './common/exceptions/global.exception-filter';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UserModule } from './user/user.module';
       },
     }),
     UserModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [

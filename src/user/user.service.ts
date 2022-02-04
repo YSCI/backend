@@ -46,6 +46,13 @@ export class UserService {
     return await this.userRepository.findOne(id);
   }
 
+  async findByUsername(username: string) {
+    return this.userRepository.findOne(
+      { username },
+      { select: ['password', 'id', 'username'] },
+    );
+  }
+
   async update(id: number, updateUserDto: UpdateUserDto) {
     const updateResult = await this.userRepository.update(id, updateUserDto);
 
