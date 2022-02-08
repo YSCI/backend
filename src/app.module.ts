@@ -3,10 +3,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getConnectionOptions } from 'typeorm';
+import { AuthModule } from './auth/auth.module';
 import config from './common/configs/app.config';
 import { GlobalExceptionFilter } from './common/exceptions/global.exception-filter';
+import { ProfessionModule } from './profession/profession.module';
 import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     UserModule,
     AuthModule,
+    ProfessionModule,
   ],
   controllers: [],
   providers: [
