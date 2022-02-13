@@ -1,16 +1,8 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { BaseEntity } from 'src/common/entities/base.entity';
+import { Column, Entity } from 'typeorm';
 
 @Entity()
-export class Profession {
-  @PrimaryGeneratedColumn()
-  public id: number;
-
+export class Profession extends BaseEntity {
   @Column({ unique: true })
   public name: string;
 
@@ -25,10 +17,4 @@ export class Profession {
 
   @Column({ nullable: true })
   public number: number;
-
-  @CreateDateColumn()
-  public createdAt: Date;
-
-  @UpdateDateColumn()
-  public updatedAt: Date;
 }

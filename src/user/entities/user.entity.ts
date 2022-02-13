@@ -1,19 +1,9 @@
 import * as bcrypt from 'bcrypt';
-import {
-  BeforeInsert,
-  BeforeUpdate,
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { BaseEntity } from 'src/common/entities/base.entity';
+import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
 
 @Entity()
-export class User {
-  @PrimaryGeneratedColumn()
-  public id: number;
-
+export class User extends BaseEntity {
   @Column()
   public name: string;
 
@@ -25,12 +15,6 @@ export class User {
 
   @Column({ select: false })
   public password: string;
-
-  @CreateDateColumn()
-  public createdAt: Date;
-
-  @UpdateDateColumn()
-  public updatedAt: Date;
 
   @BeforeInsert()
   @BeforeUpdate()
