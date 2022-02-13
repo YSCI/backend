@@ -8,6 +8,7 @@ import config from './common/configs/app.config';
 import { GlobalExceptionFilter } from './common/exceptions/global.exception-filter';
 import { ProfessionModule } from './profession/profession.module';
 import { UserModule } from './user/user.module';
+import { CitizenshipModule } from './citizenship/citizenship.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { UserModule } from './user/user.module';
     UserModule,
     AuthModule,
     ProfessionModule,
+    CitizenshipModule,
   ],
   controllers: [],
   providers: [
