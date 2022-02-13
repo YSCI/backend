@@ -10,6 +10,7 @@ import { ProfessionModule } from './profession/profession.module';
 import { UserModule } from './user/user.module';
 import { CitizenshipModule } from './citizenship/citizenship.module';
 import { HealthStatusModule } from './health-status/health-status.module';
+import { RegionModule } from './region/region.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { HealthStatusModule } from './health-status/health-status.module';
     ProfessionModule,
     CitizenshipModule,
     HealthStatusModule,
+    RegionModule,
   ],
   controllers: [],
   providers: [
