@@ -12,6 +12,7 @@ import { CitizenshipModule } from './citizenship/citizenship.module';
 import { HealthStatusModule } from './health-status/health-status.module';
 import { RegionModule } from './region/region.module';
 import { CommunityModule } from './community/community.module';
+import { StatusModule } from './status/status.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { CommunityModule } from './community/community.module';
     HealthStatusModule,
     RegionModule,
     CommunityModule,
+    StatusModule,
   ],
   controllers: [],
   providers: [
