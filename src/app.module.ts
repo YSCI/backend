@@ -11,6 +11,7 @@ import { UserModule } from './user/user.module';
 import { CitizenshipModule } from './citizenship/citizenship.module';
 import { HealthStatusModule } from './health-status/health-status.module';
 import { RegionModule } from './region/region.module';
+import { CommunityModule } from './community/community.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { RegionModule } from './region/region.module';
     CitizenshipModule,
     HealthStatusModule,
     RegionModule,
+    CommunityModule,
   ],
   controllers: [],
   providers: [
