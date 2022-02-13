@@ -9,6 +9,7 @@ import { GlobalExceptionFilter } from './common/exceptions/global.exception-filt
 import { ProfessionModule } from './profession/profession.module';
 import { UserModule } from './user/user.module';
 import { CitizenshipModule } from './citizenship/citizenship.module';
+import { HealthStatusModule } from './health-status/health-status.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { CitizenshipModule } from './citizenship/citizenship.module';
     AuthModule,
     ProfessionModule,
     CitizenshipModule,
+    HealthStatusModule,
   ],
   controllers: [],
   providers: [
