@@ -14,6 +14,7 @@ import { RegionModule } from './region/region.module';
 import { CommunityModule } from './community/community.module';
 import { StatusModule } from './status/status.module';
 import { NationalityModule } from './nationality/nationality.module';
+import { PrivilegeModule } from './privilege/privilege.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { NationalityModule } from './nationality/nationality.module';
     CommunityModule,
     StatusModule,
     NationalityModule,
+    PrivilegeModule,
   ],
   controllers: [],
   providers: [
