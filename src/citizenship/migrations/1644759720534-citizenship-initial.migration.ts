@@ -12,7 +12,7 @@ export class CitizenshipInitialMigration1644759720534
                 "country" character varying NOT NULL,
                 "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
                 "updatedAt" TIMESTAMP NOT NULL DEFAULT now(),
-                CONSTRAINT "PK_14861bdc8463fecc684d3b55db8" PRIMARY KEY ("id")
+                CONSTRAINT "PK_14861bdc8463fecc684d3b55db8" PRIMARY KEY ("id"),
                 CONSTRAINT "UQ_dcd989387b401ac2bf475f3c052" UNIQUE ("country")
 
             )
