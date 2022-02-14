@@ -4,17 +4,18 @@ import { APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getConnectionOptions } from 'typeorm';
 import { AuthModule } from './auth/auth.module';
+import { CitizenshipModule } from './citizenship/citizenship.module';
+import { CommisariatModule } from './commissariat/commissariat.module';
 import config from './common/configs/app.config';
 import { GlobalExceptionFilter } from './common/exceptions/global.exception-filter';
-import { ProfessionModule } from './profession/profession.module';
-import { UserModule } from './user/user.module';
-import { CitizenshipModule } from './citizenship/citizenship.module';
-import { HealthStatusModule } from './health-status/health-status.module';
-import { RegionModule } from './region/region.module';
 import { CommunityModule } from './community/community.module';
-import { StatusModule } from './status/status.module';
+import { HealthStatusModule } from './health-status/health-status.module';
 import { NationalityModule } from './nationality/nationality.module';
 import { PrivilegeModule } from './privilege/privilege.module';
+import { ProfessionModule } from './profession/profession.module';
+import { RegionModule } from './region/region.module';
+import { StatusModule } from './status/status.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { PrivilegeModule } from './privilege/privilege.module';
     StatusModule,
     NationalityModule,
     PrivilegeModule,
+    CommisariatModule,
   ],
   controllers: [],
   providers: [
