@@ -16,6 +16,9 @@ import { ProfessionModule } from './profession/profession.module';
 import { RegionModule } from './region/region.module';
 import { StatusModule } from './status/status.module';
 import { UserModule } from './user/user.module';
+import { CommandModule } from './command/command.module';
+import { CommandHistoryModule } from './command-history/command-history.module';
+import { StudentModule } from './student/student.module';
 
 @Module({
   imports: [
@@ -46,6 +49,9 @@ import { UserModule } from './user/user.module';
     NationalityModule,
     PrivilegeModule,
     CommisariatModule,
+    CommandModule,
+    CommandHistoryModule,
+    StudentModule,
   ],
   controllers: [],
   providers: [
