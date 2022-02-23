@@ -5,8 +5,8 @@ import {
   Get,
   NotFoundException,
   Param,
-  Patch,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import { IOk } from 'src/common/types/ok.type';
@@ -41,7 +41,7 @@ export class PrivilegeController {
     return privilege;
   }
 
-  @Patch(':id')
+  @Put(':id')
   async update(
     @Param() { id }: PathParams,
     @Body() updatePrivilegeDto: UpdatePrivilegeDto,

@@ -5,8 +5,8 @@ import {
   Get,
   NotFoundException,
   Param,
-  Patch,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import { IOk } from 'src/common/types/ok.type';
@@ -39,7 +39,7 @@ export class ProfessionController {
     return profession;
   }
 
-  @Patch(':id')
+  @Put(':id')
   async update(
     @Param() { id }: PathParams,
     @Body() updateProfessionDto: UpdateProfessionDto,

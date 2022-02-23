@@ -5,8 +5,8 @@ import {
   Get,
   NotFoundException,
   Param,
-  Patch,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import { PathParams } from 'src/common/types/path-params.type';
@@ -43,7 +43,7 @@ export class UserController {
     return user;
   }
 
-  @Patch(':id')
+  @Put(':id')
   async update(
     @Param() { id }: PathParams,
     @Body() updateUserDto: UpdateUserDto,
