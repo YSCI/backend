@@ -1,4 +1,11 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
+import {
+  IsDecimal,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 
 export class CreateProfessionDto {
   @IsString()
@@ -20,4 +27,7 @@ export class CreateProfessionDto {
   @IsOptional()
   @IsInt()
   public number: number;
+
+  @IsDecimal()
+  public fee: string;
 }

@@ -1,4 +1,11 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
+import {
+  IsDecimal,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 import { Pagination } from 'src/common/types/pagination.type';
 
 export class ProfessionsFilter extends Pagination {
@@ -25,4 +32,8 @@ export class ProfessionsFilter extends Pagination {
   @IsOptional()
   @IsInt()
   public number?: number;
+
+  @IsOptional()
+  @IsDecimal()
+  public fee: string;
 }

@@ -54,6 +54,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       }
     }
 
+    console.log(exception);
+
     response.status(responseObj.status).json(responseObj.instance);
   }
 }

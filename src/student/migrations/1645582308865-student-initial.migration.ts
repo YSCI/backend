@@ -32,19 +32,6 @@ export class StudentInitialMigration1645582308865
             )
         `);
     await queryRunner.query(`
-            CREATE TABLE "students_privileges" (
-                "studentId" integer NOT NULL,
-                "privilegeId" integer NOT NULL,
-                CONSTRAINT "PK_e35a620cd34039fa50646b4e940" PRIMARY KEY ("studentId", "privilegeId")
-            )
-        `);
-    await queryRunner.query(`
-            CREATE INDEX "IDX_0ea11de9e45a7b66ef3ad60ae9" ON "students_privileges" ("studentId")
-        `);
-    await queryRunner.query(`
-            CREATE INDEX "IDX_4f69cf3ecd722d6f3becbaf319" ON "students_privileges" ("privilegeId")
-        `);
-    await queryRunner.query(`
             ALTER TABLE "command_history"
             ADD "commandNumber" character varying NOT NULL
         `);
@@ -72,23 +59,9 @@ export class StudentInitialMigration1645582308865
             ALTER TABLE "student"
             ADD CONSTRAINT "FK_f6b7cda3b70784d1ce2d8fb8d1a" FOREIGN KEY ("commissariatId") REFERENCES "commissariat"("id") ON DELETE NO ACTION ON UPDATE NO ACTION
         `);
-    await queryRunner.query(`
-            ALTER TABLE "students_privileges"
-            ADD CONSTRAINT "FK_0ea11de9e45a7b66ef3ad60ae96" FOREIGN KEY ("studentId") REFERENCES "student"("id") ON DELETE CASCADE ON UPDATE CASCADE
-        `);
-    await queryRunner.query(`
-            ALTER TABLE "students_privileges"
-            ADD CONSTRAINT "FK_4f69cf3ecd722d6f3becbaf3194" FOREIGN KEY ("privilegeId") REFERENCES "privilege"("id") ON DELETE CASCADE ON UPDATE CASCADE
-        `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`
-            ALTER TABLE "students_privileges" DROP CONSTRAINT "FK_4f69cf3ecd722d6f3becbaf3194"
-        `);
-    await queryRunner.query(`
-            ALTER TABLE "students_privileges" DROP CONSTRAINT "FK_0ea11de9e45a7b66ef3ad60ae96"
-        `);
     await queryRunner.query(`
             ALTER TABLE "student" DROP CONSTRAINT "FK_f6b7cda3b70784d1ce2d8fb8d1a"
         `);
@@ -110,15 +83,7 @@ export class StudentInitialMigration1645582308865
     await queryRunner.query(`
             ALTER TABLE "command_history" DROP COLUMN "commandNumber"
         `);
-    await queryRunner.query(`
-            DROP INDEX "public"."IDX_4f69cf3ecd722d6f3becbaf319"
-        `);
-    await queryRunner.query(`
-            DROP INDEX "public"."IDX_0ea11de9e45a7b66ef3ad60ae9"
-        `);
-    await queryRunner.query(`
-            DROP TABLE "students_privileges"
-        `);
+
     await queryRunner.query(`
             DROP TABLE "student"
         `);

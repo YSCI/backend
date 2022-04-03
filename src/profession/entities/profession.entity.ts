@@ -17,4 +17,7 @@ export class Profession extends BaseEntity {
 
   @Column({ nullable: true })
   public number: number;
+
+  @Column('decimal')
+  public fee: string;
 }

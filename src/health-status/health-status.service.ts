@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
-import { FindCondition, ILike, Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { CreateHealthStatusDto } from './dto/create-health-status.dto';
 import { UpdateHealthStatusDto } from './dto/update-health-status.dto';
 import { HealthStatus } from './entities/health-status.entity';
@@ -17,7 +17,7 @@ export class HealthStatusService {
   }
 
   async findAll(filters: HealthStatusFilter) {
-    const where: FindCondition<HealthStatus> = {};
+    const where: FindOptionsWhere<HealthStatus> = {};
 
     if (filters.status) where.status = ILike(filters.status + '%');
 
@@ -28,7 +28,7 @@ export class HealthStatusService {
   }
 
   async findOne(id: number) {
-    return await this.healthStatusRepository.findOne(id);
+    return await this.healthStatusRepository.findOneBy({ id });
   }
 
   async update(id: number, updateHealthStatusDto: UpdateHealthStatusDto) {

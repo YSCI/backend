@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindConditions, ILike, Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { CreateProfessionDto } from './dto/create-profession.dto';
 import { UpdateProfessionDto } from './dto/update-profession.dto';
 import { Profession } from './entities/profession.entity';
@@ -16,7 +16,7 @@ export class ProfessionService {
   }
 
   async findAll(filters: ProfessionsFilter) {
-    const where: FindConditions<Profession> = {};
+    const where: FindOptionsWhere<Profession> = {};
 
     if (filters.name) where.name = ILike(filters.name + '%');
     if (filters.code) where.code = ILike(filters.code + '%');
@@ -24,6 +24,7 @@ export class ProfessionService {
       where.abbreviation = ILike(filters.abbreviation + '%');
     if (filters.yearsCount) where.yearsCount = filters.yearsCount;
     if (filters.number) where.number = filters.number;
+    if (filters.fee) where.fee = filters.fee;
 
     return await this.professionsRepository.find({
       where,
@@ -36,7 +37,7 @@ export class ProfessionService {
   }
 
   async findOne(id: number) {
-    return await this.professionsRepository.findOne(id);
+    return await this.professionsRepository.findOneBy({ id });
   }
 
   async update(id: number, updateProfessionDto: UpdateProfessionDto) {

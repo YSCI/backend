@@ -4,6 +4,7 @@ import {
   IsDateString,
   IsInt,
   IsNotEmpty,
+  IsOptional,
   IsString,
   Min,
 } from 'class-validator';
@@ -75,9 +76,10 @@ export class CreateStudentDto {
   @IsNotEmpty()
   public currentGroup: string;
 
+  @IsOptional()
   @IsArray()
   @ArrayNotEmpty()
   @IsInt({ each: true })
   @Min(1, { each: true })
-  public privileges: Array<number>;
+  public subprivileges: Array<number>;
 }
