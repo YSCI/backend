@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Pagination } from 'src/common/types/pagination.type';
 
 export class CommissariatFilter extends Pagination {
@@ -12,7 +12,7 @@ export class CommissariatFilter extends Pagination {
   public number: number;
 
   @IsOptional()
-  @IsInt()
-  @Min(1)
-  public communityId: number;
+  @IsString()
+  @IsNotEmpty()
+  public description: string;
 }

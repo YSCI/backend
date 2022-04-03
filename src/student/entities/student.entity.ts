@@ -3,9 +3,9 @@ import { Commissariat } from 'src/commissariat/entities/commissariat.entity';
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { HealthStatus } from 'src/health-status/entities/health-status.entity';
 import { Nationality } from 'src/nationality/entities/nationality.entity';
-import { Privilege } from 'src/privilege/entities/privilege.entity';
 import { Profession } from 'src/profession/entities/profession.entity';
 import { Status } from 'src/status/entities/status.entity';
+import { Subprivilege } from 'src/subprivilege/entities/subprivilege.entity';
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
 
 @Entity()
@@ -67,9 +67,9 @@ export class Student extends BaseEntity {
   @ManyToOne(() => Commissariat)
   public commissariat: Commissariat;
 
-  @ManyToMany(() => Privilege)
-  @JoinTable({ name: 'students_privileges' })
-  public privileges: Array<Privilege>;
+  @ManyToMany(() => Subprivilege)
+  @JoinTable({ name: 'students_subprivileges' })
+  public subprivileges: Array<Subprivilege>;
 
   @Column('timestamp with time zone', { default: () => 'CURRENT_TIMESTAMP' })
   public dateOfAcceptance: Date;

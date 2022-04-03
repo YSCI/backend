@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
-import { FindCondition, ILike, Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { CreateCommandDto } from './dto/create-command.dto';
 import { UpdateCommandDto } from './dto/update-command.dto';
 import { Command } from './entities/command.entity';
@@ -17,7 +17,7 @@ export class CommandService {
   }
 
   async findAll(filters: CommandFilter) {
-    const where: FindCondition<Command> = {};
+    const where: FindOptionsWhere<Command> = {};
 
     if (filters.name) where.name = ILike(filters.name + '%');
     if (filters.changeableStatusId)
@@ -30,7 +30,7 @@ export class CommandService {
   }
 
   async findOne(id: number) {
-    return await this.commandRepository.findOne(id);
+    return await this.commandRepository.findOneBy({ id });
   }
 
   async update(id: number, updateCommandDto: UpdateCommandDto) {

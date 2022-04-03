@@ -1,6 +1,5 @@
 import { BaseEntity } from 'src/common/entities/base.entity';
-import { Community } from 'src/community/entities/community.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 
 @Entity()
 export class Commissariat extends BaseEntity {
@@ -11,8 +10,5 @@ export class Commissariat extends BaseEntity {
   public number: number;
 
   @Column()
-  public communityId: number;
-
-  @ManyToOne(() => Community)
-  public community: Community;
+  public description: string;
 }

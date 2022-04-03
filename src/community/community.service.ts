@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
-import { FindCondition, ILike, Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { CreateCommunityDto } from './dto/create-community.dto';
 import { UpdateCommunityDto } from './dto/update-community.dto';
 import { Community } from './entities/community.entity';
@@ -17,7 +17,7 @@ export class CommunityService {
   }
 
   async findAll(filters: CommunityFilter) {
-    const where: FindCondition<Community> = {};
+    const where: FindOptionsWhere<Community> = {};
 
     if (filters.name) where.name = ILike(filters.name + '%');
     if (filters.regionId) where.regionId = filters.regionId;
@@ -29,7 +29,7 @@ export class CommunityService {
   }
 
   async findOne(id: number) {
-    return await this.communityRepository.findOne(id);
+    return await this.communityRepository.findOneBy({ id });
   }
 
   async update(id: number, updateCommunityDto: UpdateCommunityDto) {

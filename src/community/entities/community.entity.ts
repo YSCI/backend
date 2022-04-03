@@ -10,6 +10,6 @@ export class Community extends BaseEntity {
   @Column()
   public regionId: number;
 
-  @ManyToOne(() => Region)
+  @ManyToOne(() => Region, (region) => region.communities)
   public region: Region;
 }

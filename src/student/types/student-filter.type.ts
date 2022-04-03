@@ -3,6 +3,7 @@ import {
   IsArray,
   IsInt,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   Min,
@@ -28,7 +29,12 @@ export class StudentFilter extends Pagination {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  public dateOfBirth: string;
+  public dateOfBirthStart: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  public dateOfBirthEnd: string;
 
   @IsOptional()
   @IsString()
@@ -76,9 +82,12 @@ export class StudentFilter extends Pagination {
   public commissariatId: number;
 
   @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  public dateOfAcceptance: string;
+  @IsNumber()
+  public dateOfAcceptanceStart: number;
+
+  @IsOptional()
+  @IsNumber()
+  public dateOfAcceptanceEnd: number;
 
   @IsOptional()
   @IsString()
@@ -99,5 +108,5 @@ export class StudentFilter extends Pagination {
   @ArrayNotEmpty()
   @IsInt({ each: true })
   @Min(1, { each: true })
-  public privileges: Array<number>;
+  public subprivileges: Array<number>;
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
-import { FindCondition, Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { CommandHistory } from './entities/command-history.entity';
 import { CommandHistoryFilter } from './types/command-history-filter.type';
 
@@ -15,7 +15,7 @@ export class CommandHistoryService {
   }
 
   async findAll(filters: CommandHistoryFilter) {
-    const where: FindCondition<CommandHistory> = {};
+    const where: FindOptionsWhere<CommandHistory> = {};
 
     if (filters.commandId) where.commandId = filters.commandId;
     if (filters.studentId) where.studentId = filters.studentId;
@@ -23,14 +23,21 @@ export class CommandHistoryService {
 
     const findOpts = attachPagination<CommandHistory>(filters);
     findOpts.where = where;
-    findOpts.relations = ['command', 'user'];
+    findOpts.relations = {
+      command: true,
+      user: true,
+    };
 
     return await this.commandHistoryRepository.find(findOpts);
   }
 
   async findOne(id: number) {
-    return await this.commandHistoryRepository.findOne(id, {
-      relations: ['command', 'user'],
+    return await this.commandHistoryRepository.find({
+      where: { id },
+      relations: {
+        command: true,
+        user: true,
+      },
     });
   }
 }
