@@ -37,14 +37,45 @@ export class StudentFilter extends Pagination {
   public dateOfBirthEnd: string;
 
   @IsOptional()
+  @IsInt()
+  @Min(1)
+  public registrationRegionId: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  public registrationCommunityId: number;
+
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
   public registrationAddress: string;
 
   @IsOptional()
+  @IsInt()
+  @Min(1)
+  public residentRegionId: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  public residentCommunityId: number;
+
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
   public residentAddress: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  public passportSeries: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  @IsNotEmpty()
+  public socialCardNumber: number;
 
   @IsOptional()
   @IsString()

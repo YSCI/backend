@@ -1,10 +1,4 @@
-import {
-  IsInt,
-  IsNotEmpty,
-  IsOptional,
-  IsPositive,
-  IsString,
-} from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
 import { Pagination } from 'src/common/types/pagination.type';
 
 export class SubprivilegeFilter extends Pagination {
@@ -15,6 +9,6 @@ export class SubprivilegeFilter extends Pagination {
 
   @IsOptional()
   @IsInt()
-  @IsPositive()
+  @Min(1)
   public privilegeId: number;
 }

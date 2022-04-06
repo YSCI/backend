@@ -31,16 +31,27 @@ export class StudentService {
   async findAll(filters: StudentFilter) {
     const where: FindOptionsWhere<Student> = {};
 
-    // TODO: Add filters for contactNumbers and privileges
     if (filters.firstname) where.firstname = ILike(filters.firstname + '%');
     if (filters.lastname) where.lastname = ILike(filters.lastname + '%');
     if (filters.fathername) where.fathername = ILike(filters.fathername + '%');
+    if (filters.registrationRegionId)
+      where.registrationRegionId = filters.registrationRegionId;
+    if (filters.registrationCommunityId)
+      where.registrationCommunityId = filters.registrationCommunityId;
     if (filters.registrationAddress)
       where.registrationAddress = ILike(
         '%' + filters.registrationAddress + '%',
       );
+    if (filters.residentRegionId)
+      where.residentRegionId = filters.residentRegionId;
+    if (filters.residentCommunityId)
+      where.residentCommunityId = filters.residentCommunityId;
     if (filters.residentAddress)
       where.residentAddress = ILike('%' + filters.residentAddress + '%');
+    if (filters.passportSeries)
+      where.passportSeries = ILike(filters.passportSeries + '%');
+    if (filters.socialCardNumber)
+      where.socialCardNumber = filters.socialCardNumber;
     if (filters.citizenshipId) where.citizenshipId = filters.citizenshipId;
     if (filters.nationalityId) where.nationalityId = filters.nationalityId;
     if (filters.professionId) where.professionId = filters.professionId;
@@ -67,7 +78,9 @@ export class StudentService {
       where.subprivileges = {
         id: In(filters.subprivileges),
       };
+
     const findOpts = attachPagination<Student>(filters);
+
     findOpts.where = where;
     findOpts.relations = {
       citizenship: true,
@@ -76,7 +89,9 @@ export class StudentService {
       healthStatus: true,
       status: true,
       commissariat: true,
-      subprivileges: true,
+      subprivileges: {
+        privilege: true,
+      },
     };
 
     return await this.studentRepository.find(findOpts);
@@ -87,6 +102,10 @@ export class StudentService {
       where: { id },
       relations: {
         citizenship: true,
+        registrationRegion: true,
+        registrationCommunity: true,
+        residentCommunity: true,
+        residentRegion: true,
         nationality: true,
         profession: true,
         healthStatus: true,
@@ -102,15 +121,9 @@ export class StudentService {
   }
 
   async update(id: number, updateStudentDto: UpdateStudentDto) {
-    const privileges = updateStudentDto.subprivileges?.map((item) => {
-      const privilege = new Subprivilege();
-      privilege.id = item;
-      return privilege;
-    });
-
     const result = await this.studentRepository.update(
       id,
-      Object.assign(updateStudentDto, { subprivileges: privileges }),
+      updateStudentDto as any, // temporary
     );
 
     return !!result.affected;

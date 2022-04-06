@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { getConnectionOptions } from 'typeorm';
 import { AuthModule } from './auth/auth.module';
 import { CitizenshipModule } from './citizenship/citizenship.module';
+import { CommandHistoryModule } from './command-history/command-history.module';
+import { CommandModule } from './command/command.module';
 import { CommisariatModule } from './commissariat/commissariat.module';
 import config from './common/configs/app.config';
 import { GlobalExceptionFilter } from './common/exceptions/global.exception-filter';
@@ -15,10 +17,9 @@ import { PrivilegeModule } from './privilege/privilege.module';
 import { ProfessionModule } from './profession/profession.module';
 import { RegionModule } from './region/region.module';
 import { StatusModule } from './status/status.module';
-import { UserModule } from './user/user.module';
-import { CommandModule } from './command/command.module';
-import { CommandHistoryModule } from './command-history/command-history.module';
 import { StudentModule } from './student/student.module';
+import { SubprivilegeModule } from './subprivilege/subprivilege.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { StudentModule } from './student/student.module';
     StatusModule,
     NationalityModule,
     PrivilegeModule,
+    SubprivilegeModule,
     CommisariatModule,
     CommandModule,
     CommandHistoryModule,
