@@ -1,5 +1,6 @@
 import { BaseEntity } from 'src/common/entities/base.entity';
-import { Column, Entity } from 'typeorm';
+import { Student } from 'src/student/entities/student.entity';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity()
 export class Profession extends BaseEntity {
@@ -20,4 +21,7 @@ export class Profession extends BaseEntity {
 
   @Column('decimal')
   public fee: string;
+
+  @OneToMany(() => Student, (student) => student.commissariat)
+  public students: Array<Student>;
 }

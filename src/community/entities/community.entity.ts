@@ -1,6 +1,7 @@
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { Region } from 'src/region/entities/region.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Student } from 'src/student/entities/student.entity';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity()
 export class Community extends BaseEntity {
@@ -12,4 +13,10 @@ export class Community extends BaseEntity {
 
   @ManyToOne(() => Region, (region) => region.communities)
   public region: Region;
+
+  @OneToMany(() => Student, (student) => student.registrationRegion)
+  public registratedStudents: Array<Student>;
+
+  @OneToMany(() => Student, (student) => student.residentRegion)
+  public residentStudents: Array<Student>;
 }

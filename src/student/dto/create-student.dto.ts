@@ -25,13 +25,42 @@ export class CreateStudentDto {
   @IsDateString()
   public dateOfBirth: string;
 
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  public registrationRegionId: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  public registrationCommunityId: number;
+
   @IsString()
   @IsNotEmpty()
   public registrationAddress: string;
 
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  public residentRegionId: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  public residentCommunityId: number;
+
   @IsString()
   @IsNotEmpty()
   public residentAddress: string;
+
+  @IsString()
+  @IsNotEmpty()
+  public passportSeries: string;
+
+  @IsInt()
+  @Min(1)
+  @IsNotEmpty()
+  public socialCardNumber: number;
 
   @IsArray()
   @ArrayNotEmpty()

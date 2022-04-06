@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsPositive, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsString, Min } from 'class-validator';
 
 export class CreateSubprivilegeDto {
   @IsString()
@@ -6,6 +6,6 @@ export class CreateSubprivilegeDto {
   public name: string;
 
   @IsInt()
-  @IsPositive()
+  @Min(1)
   public privilegeId: number;
 }

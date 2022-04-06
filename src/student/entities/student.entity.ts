@@ -1,9 +1,11 @@
 import { Citizenship } from 'src/citizenship/entities/citizenship.entity';
 import { Commissariat } from 'src/commissariat/entities/commissariat.entity';
 import { BaseEntity } from 'src/common/entities/base.entity';
+import { Community } from 'src/community/entities/community.entity';
 import { HealthStatus } from 'src/health-status/entities/health-status.entity';
 import { Nationality } from 'src/nationality/entities/nationality.entity';
 import { Profession } from 'src/profession/entities/profession.entity';
+import { Region } from 'src/region/entities/region.entity';
 import { Status } from 'src/status/entities/status.entity';
 import { Subprivilege } from 'src/subprivilege/entities/subprivilege.entity';
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
@@ -23,10 +25,40 @@ export class Student extends BaseEntity {
   public dateOfBirth: Date;
 
   @Column()
+  public registrationRegionId: number;
+
+  @ManyToOne(() => Region, (region) => region.registratedStudents)
+  public registrationRegion: Region;
+
+  @Column()
+  public registrationCommunityId: number;
+
+  @ManyToOne(() => Community, (community) => community.registratedStudents)
+  public registrationCommunity: Community;
+
+  @Column()
+  public residentRegionId: number;
+
+  @ManyToOne(() => Region, (region) => region.residentStudents)
+  public residentRegion: Region;
+
+  @Column()
+  public residentCommunityId: number;
+
+  @ManyToOne(() => Community, (community) => community.residentStudents)
+  public residentCommunity: Community;
+
+  @Column()
   public registrationAddress: string;
 
   @Column()
   public residentAddress: string;
+
+  @Column({ unique: true })
+  public passportSeries: string;
+
+  @Column({ unique: true })
+  public socialCardNumber: number;
 
   @Column('varchar', { array: true })
   public contactNumbers: Array<string>;
@@ -46,7 +78,7 @@ export class Student extends BaseEntity {
   @Column()
   public professionId?: number;
 
-  @ManyToOne(() => Profession)
+  @ManyToOne(() => Profession, (profession) => profession.students)
   public profession: Profession;
 
   @Column()
@@ -64,7 +96,7 @@ export class Student extends BaseEntity {
   @Column()
   public commissariatId?: number;
 
-  @ManyToOne(() => Commissariat)
+  @ManyToOne(() => Commissariat, (commissariat) => commissariat.students)
   public commissariat: Commissariat;
 
   @ManyToMany(() => Subprivilege)
