@@ -2,8 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
 import { Subprivilege } from 'src/subprivilege/entities/subprivilege.entity';
-import { Between, FindOptionsWhere, ILike, In, Repository } from 'typeorm';
-import { ArrayContains } from 'typeorm/find-options/operator/ArrayContains';
+import {
+  ArrayContains,
+  Between,
+  FindOptionsWhere,
+  ILike,
+  In,
+  Repository,
+} from 'typeorm';
 import { CreateStudentDto } from './dto/create-student.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 import { Student } from './entities/student.entity';
