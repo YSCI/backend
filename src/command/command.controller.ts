@@ -11,7 +11,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { CommandHistoryService } from 'src/command-history/command-history.service';
-import { AttachDto } from 'src/command/dto/attach.dto';
+import { AttachCommandDto } from 'src/command/dto/attach-command.dto';
 import { IOk } from 'src/common/types/ok.type';
 import { PathParams } from 'src/common/types/path-params.type';
 import { StudentService } from 'src/student/student.service';
@@ -75,7 +75,10 @@ export class CommandController {
   }
 
   @Post('attach')
-  async attach(@Request() req, @Body() attachDto: AttachDto): Promise<IOk> {
+  async attach(
+    @Request() req,
+    @Body() attachDto: AttachCommandDto,
+  ): Promise<IOk> {
     // TODO: select only status id
     const command = await this.commandService.findOne(attachDto.commandId);
 

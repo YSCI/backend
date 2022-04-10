@@ -1,6 +1,6 @@
 import { IsInt, IsNotEmpty, IsString, Min } from 'class-validator';
 
-export class AttachDto {
+export class AttachCommandDto {
   @IsInt()
   @Min(1)
   public commandId: number;
