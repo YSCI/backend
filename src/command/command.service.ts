@@ -25,12 +25,22 @@ export class CommandService {
 
     const findOpts = attachPagination<Command>(filters);
     findOpts.where = where;
+    findOpts.relations = {
+      status: true,
+    };
 
     return await this.commandRepository.find(findOpts);
   }
 
   async findOne(id: number) {
-    return await this.commandRepository.findOneBy({ id });
+    const [command] = await this.commandRepository.find({
+      where: { id },
+      relations: {
+        status: true,
+      },
+    });
+
+    return command;
   }
 
   async update(id: number, updateCommandDto: UpdateCommandDto) {

@@ -24,12 +24,22 @@ export class CommunityService {
 
     const findOpts = attachPagination<Community>(filters);
     findOpts.where = where;
+    findOpts.relations = {
+      region: true,
+    };
 
     return await this.communityRepository.find(findOpts);
   }
 
   async findOne(id: number) {
-    return await this.communityRepository.findOneBy({ id });
+    const [community] = await this.communityRepository.find({
+      where: { id },
+      relations: {
+        region: true,
+      },
+    });
+
+    return community;
   }
 
   async update(id: number, updateCommunityDto: UpdateCommunityDto) {

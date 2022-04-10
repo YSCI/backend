@@ -1,6 +1,6 @@
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { Status } from 'src/status/entities/status.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Command extends BaseEntity {
@@ -11,5 +11,6 @@ export class Command extends BaseEntity {
   public changeableStatusId?: number;
 
   @ManyToOne(() => Status)
-  public changeableStatus?: Status;
+  @JoinColumn({ name: 'changeableStatusId' })
+  public status?: Status;
 }
