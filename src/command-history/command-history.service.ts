@@ -24,6 +24,7 @@ export class CommandHistoryService {
     const findOpts = attachPagination<CommandHistory>(filters);
     findOpts.where = where;
     findOpts.relations = {
+      student: true,
       command: true,
       user: true,
     };

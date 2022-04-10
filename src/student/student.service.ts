@@ -90,6 +90,10 @@ export class StudentService {
     findOpts.where = where;
     findOpts.relations = {
       citizenship: true,
+      registrationRegion: true,
+      registrationCommunity: true,
+      residentCommunity: true,
+      residentRegion: true,
       nationality: true,
       profession: true,
       healthStatus: true,

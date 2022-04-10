@@ -9,7 +9,9 @@ import {
   Put,
   Query,
   Request,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CommandHistoryService } from 'src/command-history/command-history.service';
 import { AttachCommandDto } from 'src/command/dto/attach-command.dto';
 import { IOk } from 'src/common/types/ok.type';
@@ -21,6 +23,7 @@ import { UpdateCommandDto } from './dto/update-command.dto';
 import { CommandFilter } from './types/command-filter.type';
 
 @Controller('command')
+@UseGuards(JwtAuthGuard)
 export class CommandController {
   constructor(
     private readonly commandService: CommandService,
@@ -75,10 +78,7 @@ export class CommandController {
   }
 
   @Post('attach')
-  async attach(
-    @Request() req,
-    @Body() attachDto: AttachCommandDto,
-  ): Promise<IOk> {
+  async attach(@Request() req, @Body() attachDto: AttachCommandDto) {
     // TODO: select only status id
     const command = await this.commandService.findOne(attachDto.commandId);
 
@@ -92,11 +92,11 @@ export class CommandController {
       });
     }
 
-    await this.commandHistoryService.create({
+    const studentCommand = await this.commandHistoryService.create({
       ...attachDto,
       userId: req.user.id,
     });
 
-    return { ok: true };
+    return studentCommand;
   }
 }
