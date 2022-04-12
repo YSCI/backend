@@ -10,8 +10,8 @@ export class CommandHistoryService {
   @InjectRepository(CommandHistory)
   private readonly commandHistoryRepository: Repository<CommandHistory>;
 
-  async create(createCommandHistoryDto: Partial<CommandHistory>) {
-    return await this.commandHistoryRepository.save(createCommandHistoryDto);
+  async create(commandsToBeAttached: Partial<CommandHistory>[]) {
+    return await this.commandHistoryRepository.save(commandsToBeAttached);
   }
 
   async findAll(filters: CommandHistoryFilter) {

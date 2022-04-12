@@ -85,16 +85,19 @@ export class CommandController {
     }
 
     if (command.changeableStatusId) {
-      await this.studentService.update(attachDto.studentId, {
+      await this.studentService.update(attachDto.studentIds, {
         statusId: command.changeableStatusId,
       });
     }
 
-    const studentCommand = await this.commandHistoryService.create({
-      ...attachDto,
-      userId: req.user.id,
-    });
+    const studentsCommands = attachDto.studentIds.map((id) => ({
+      commandId: attachDto.commandId,
+      commandNumber: attachDto.commandNumber,
+      studentId: id,
+    }));
 
-    return studentCommand;
+    await this.commandHistoryService.create(studentsCommands);
+
+    return studentsCommands;
   }
 }

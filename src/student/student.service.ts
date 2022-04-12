@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
-import { Subprivilege } from 'src/subprivilege/entities/subprivilege.entity';
 import {
   ArrayContains,
   Between,
@@ -21,17 +20,7 @@ export class StudentService {
   private readonly studentRepository: Repository<Student>;
 
   async create(createStudentDto: CreateStudentDto) {
-    const privileges = createStudentDto.subprivileges?.map((item) => {
-      const privilege = new Subprivilege();
-      privilege.id = item;
-      return privilege;
-    });
-
-    const student = await this.studentRepository.save(
-      Object.assign(createStudentDto, { subprivileges: privileges }),
-    );
-
-    return student;
+    return await this.studentRepository.save(createStudentDto);
   }
 
   async findAll(filters: StudentFilter) {
@@ -130,10 +119,13 @@ export class StudentService {
     return student;
   }
 
-  async update(id: number, updateStudentDto: UpdateStudentDto) {
+  update(id: number, updateStudentDto: UpdateStudentDto): Promise<boolean>;
+  update(ids: number[], updateStudentDto: UpdateStudentDto): Promise<boolean>;
+
+  async update(idOrIds: number | number[], updateStudentDto: UpdateStudentDto) {
     const result = await this.studentRepository.update(
-      id,
-      updateStudentDto as any, // temporary
+      idOrIds,
+      updateStudentDto,
     );
 
     return !!result.affected;

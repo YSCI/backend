@@ -10,19 +10,19 @@ export class CommandHistory extends BaseEntity {
   public commandId: number;
 
   @ManyToOne(() => Command, { nullable: false })
-  public command: Command;
+  public command?: Command;
 
   @Column()
   public studentId: number;
 
   @ManyToOne(() => Student)
-  public student: Student;
+  public student?: Student;
 
   @Column()
   public userId: number;
 
   @ManyToOne(() => User, { nullable: false })
-  public user: User;
+  public user?: User;
 
   @Column()
   public commandNumber: string;
