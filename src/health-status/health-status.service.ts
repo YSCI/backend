@@ -40,8 +40,8 @@ export class HealthStatusService {
     return !!result.affected;
   }
 
-  async remove(id: number) {
-    const result = await this.healthStatusRepository.delete(id);
+  async remove(ids: number[]) {
+    const result = await this.healthStatusRepository.delete(ids);
 
     return !!result.affected;
   }

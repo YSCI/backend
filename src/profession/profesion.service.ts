@@ -49,8 +49,8 @@ export class ProfessionService {
     return !!result.affected;
   }
 
-  async remove(id: number) {
-    const result = await this.professionsRepository.delete(id);
+  async remove(ids: number[]) {
+    const result = await this.professionsRepository.delete(ids);
 
     return !!result.affected;
   }

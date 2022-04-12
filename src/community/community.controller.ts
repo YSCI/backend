@@ -9,6 +9,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
+import { BatchDelete } from 'src/common/types/batch-delete.type';
 import { IOk } from 'src/common/types/ok.type';
 import { PathParams } from 'src/common/types/path-params.type';
 import { CommunityService } from './community.service';
@@ -55,9 +56,9 @@ export class CommunityController {
     return { ok: true };
   }
 
-  @Delete(':id')
-  async remove(@Param() { id }: PathParams): Promise<IOk> {
-    const result = await this.communityService.remove(id);
+  @Delete()
+  async remove(@Query() { ids }: BatchDelete): Promise<IOk> {
+    const result = await this.communityService.remove(ids);
 
     if (!result) {
       throw new NotFoundException('Community not found');

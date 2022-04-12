@@ -49,8 +49,8 @@ export class CommandService {
     return !!result.affected;
   }
 
-  async remove(id: number) {
-    const result = await this.commandRepository.delete(id);
+  async remove(ids: number[]) {
+    const result = await this.commandRepository.delete(ids);
 
     return !!result.affected;
   }
