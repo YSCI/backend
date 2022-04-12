@@ -9,9 +9,7 @@ import {
   Put,
   Query,
   Request,
-  UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CommandHistoryService } from 'src/command-history/command-history.service';
 import { AttachCommandDto } from 'src/command/dto/attach-command.dto';
 import { IOk } from 'src/common/types/ok.type';
@@ -23,7 +21,6 @@ import { UpdateCommandDto } from './dto/update-command.dto';
 import { CommandFilter } from './types/command-filter.type';
 
 @Controller('command')
-@UseGuards(JwtAuthGuard)
 export class CommandController {
   constructor(
     private readonly commandService: CommandService,
