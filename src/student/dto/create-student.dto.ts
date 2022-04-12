@@ -104,11 +104,4 @@ export class CreateStudentDto {
   @IsString()
   @IsNotEmpty()
   public currentGroup: string;
-
-  @IsOptional()
-  @IsArray()
-  @ArrayNotEmpty()
-  @IsInt({ each: true })
-  @Min(1, { each: true })
-  public subprivileges: Array<number>;
 }
