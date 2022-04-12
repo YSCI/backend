@@ -94,7 +94,7 @@ export class CommandController {
       commandId: attachDto.commandId,
       commandNumber: attachDto.commandNumber,
       studentId: id,
-      userId: req.userId,
+      userId: req.user.id,
     }));
 
     await this.commandHistoryService.create(studentsCommands);
