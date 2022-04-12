@@ -9,6 +9,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
+import { BatchDelete } from 'src/common/types/batch-delete.type';
 import { IOk } from 'src/common/types/ok.type';
 import { PathParams } from 'src/common/types/path-params.type';
 import { CreateProfessionDto } from './dto/create-profession.dto';
@@ -51,9 +52,9 @@ export class ProfessionController {
     return { ok: true };
   }
 
-  @Delete(':id')
-  async remove(@Param() { id }: PathParams): Promise<IOk> {
-    const result = await this.professionService.remove(id);
+  @Delete()
+  async remove(@Query() { ids }: BatchDelete): Promise<IOk> {
+    const result = await this.professionService.remove(ids);
 
     if (!result) throw new NotFoundException('Profession not found');
 

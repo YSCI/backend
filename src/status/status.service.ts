@@ -37,8 +37,8 @@ export class StatusService {
     return !!result.affected;
   }
 
-  async remove(id: number) {
-    const result = await this.statusRepository.delete(id);
+  async remove(ids: number[]) {
+    const result = await this.statusRepository.delete(ids);
 
     return !!result.affected;
   }

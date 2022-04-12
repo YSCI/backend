@@ -9,6 +9,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
+import { BatchDelete } from 'src/common/types/batch-delete.type';
 import { PathParams } from 'src/common/types/path-params.type';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -51,8 +52,8 @@ export class UserController {
     return await this.userService.update(id, updateUserDto);
   }
 
-  @Delete(':id')
-  async remove(@Param() { id }: PathParams) {
-    return await this.userService.remove(id);
+  @Delete()
+  async remove(@Query() { ids }: BatchDelete) {
+    return await this.userService.remove(ids);
   }
 }

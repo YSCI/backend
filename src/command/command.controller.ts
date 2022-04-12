@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { CommandHistoryService } from 'src/command-history/command-history.service';
 import { AttachCommandDto } from 'src/command/dto/attach-command.dto';
+import { BatchDelete } from 'src/common/types/batch-delete.type';
 import { IOk } from 'src/common/types/ok.type';
 import { PathParams } from 'src/common/types/path-params.type';
 import { StudentService } from 'src/student/student.service';
@@ -63,9 +64,9 @@ export class CommandController {
     return { ok: true };
   }
 
-  @Delete(':id')
-  async remove(@Param() { id }: PathParams): Promise<IOk> {
-    const result = await this.commandService.remove(id);
+  @Delete()
+  async remove(@Query() { ids }: BatchDelete): Promise<IOk> {
+    const result = await this.commandService.remove(ids);
 
     if (!result) {
       throw new NotFoundException('Command not found');

@@ -9,6 +9,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
+import { BatchDelete } from 'src/common/types/batch-delete.type';
 import { IOk } from 'src/common/types/ok.type';
 import { PathParams } from 'src/common/types/path-params.type';
 import { CommissariatService } from './commissariat.service';
@@ -58,9 +59,9 @@ export class CommissariatController {
     return { ok: true };
   }
 
-  @Delete(':id')
-  async remove(@Param() { id }: PathParams): Promise<IOk> {
-    const result = await this.commissariatService.remove(id);
+  @Delete()
+  async remove(@Query() { ids }: BatchDelete): Promise<IOk> {
+    const result = await this.commissariatService.remove(ids);
 
     if (!result) {
       throw new NotFoundException('Commissariat not found');

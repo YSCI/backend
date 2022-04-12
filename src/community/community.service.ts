@@ -51,8 +51,8 @@ export class CommunityService {
     return !!result.affected;
   }
 
-  async remove(id: number) {
-    const result = await this.communityRepository.delete(id);
+  async remove(ids: number[]) {
+    const result = await this.communityRepository.delete(ids);
 
     return !!result.affected;
   }

@@ -40,8 +40,8 @@ export class NationalityService {
     return !!result.affected;
   }
 
-  async remove(id: number) {
-    const result = await this.nationalityRepository.delete(id);
+  async remove(ids: number[]) {
+    const result = await this.nationalityRepository.delete(ids);
 
     return !!result.affected;
   }

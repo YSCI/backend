@@ -139,8 +139,8 @@ export class StudentService {
     return !!result.affected;
   }
 
-  async remove(id: number) {
-    const result = await this.studentRepository.delete(id);
+  async remove(ids: number[]) {
+    const result = await this.studentRepository.delete(ids);
 
     return !!result.affected;
   }

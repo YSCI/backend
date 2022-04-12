@@ -9,6 +9,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
+import { BatchDelete } from 'src/common/types/batch-delete.type';
 import { IOk } from 'src/common/types/ok.type';
 import { PathParams } from 'src/common/types/path-params.type';
 import { CreateRegionDto } from './dto/create-region.dto';
@@ -55,9 +56,9 @@ export class RegionController {
     return { ok: true };
   }
 
-  @Delete(':id')
-  async remove(@Param() { id }: PathParams): Promise<IOk> {
-    const result = await this.regionService.remove(id);
+  @Delete()
+  async remove(@Query() { ids }: BatchDelete): Promise<IOk> {
+    const result = await this.regionService.remove(ids);
 
     if (!result) {
       throw new NotFoundException('Region not found');
