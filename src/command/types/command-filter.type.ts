@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Pagination } from 'src/common/types/pagination.type';
 
 export class CommandFilter extends Pagination {
@@ -6,9 +6,4 @@ export class CommandFilter extends Pagination {
   @IsString()
   @IsNotEmpty()
   public name: string;
-
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  public changeableStatusId: number;
 }

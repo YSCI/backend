@@ -9,7 +9,7 @@ export class CommandHistory extends BaseEntity {
   @Column()
   public commandId: number;
 
-  @ManyToOne(() => Command, { nullable: false })
+  @ManyToOne(() => Command, { nullable: false, onDelete: 'CASCADE' })
   public command?: Command;
 
   @Column()
@@ -21,9 +21,12 @@ export class CommandHistory extends BaseEntity {
   @Column()
   public userId: number;
 
-  @ManyToOne(() => User, { nullable: false })
+  @ManyToOne(() => User, { nullable: false, onDelete: 'CASCADE' })
   public user?: User;
 
   @Column()
   public commandNumber: string;
+
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  public affectDate: Date;
 }
