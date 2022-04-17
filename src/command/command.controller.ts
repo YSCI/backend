@@ -11,6 +11,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { CommandHistoryService } from 'src/command-history/command-history.service';
+import { CommandHistory } from 'src/command-history/entities/command-history.entity';
 import { AttachCommandDto } from 'src/command/dto/attach-command.dto';
 import { BatchDelete } from 'src/common/types/batch-delete.type';
 import { IOk } from 'src/common/types/ok.type';
@@ -84,18 +85,21 @@ export class CommandController {
       throw new NotFoundException('Command not found');
     }
 
-    if (command.changeableStatusId) {
-      await this.studentService.update(attachDto.studentIds, {
-        statusId: command.changeableStatusId,
-      });
+    if (command.changeableColumns) {
+      await this.studentService.update(
+        attachDto.studentIds,
+        command.changeableColumns,
+      );
     }
 
-    const studentsCommands = attachDto.studentIds.map((id) => ({
-      commandId: attachDto.commandId,
-      commandNumber: attachDto.commandNumber,
-      studentId: id,
-      userId: req.user.id,
-    }));
+    const studentsCommands = attachDto.studentIds.map<Partial<CommandHistory>>(
+      (id) => ({
+        commandId: attachDto.commandId,
+        commandNumber: attachDto.commandNumber,
+        studentId: id,
+        userId: req.user.id,
+      }),
+    );
 
     await this.commandHistoryService.create(studentsCommands);
 

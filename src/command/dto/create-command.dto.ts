@@ -1,4 +1,5 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsObject, IsOptional, IsString } from 'class-validator';
+import { UpdateStudentDto } from 'src/student/dto/update-student.dto';
 
 export class CreateCommandDto {
   @IsString()
@@ -6,6 +7,7 @@ export class CreateCommandDto {
   public name: string;
 
   @IsOptional()
-  @IsInt()
-  public changeableStatusId?: number;
+  @IsObject()
+  // TODO: add normal validations
+  public changeableColumns: UpdateStudentDto;
 }

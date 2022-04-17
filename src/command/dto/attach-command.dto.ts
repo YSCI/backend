@@ -1,8 +1,10 @@
 import {
   ArrayNotEmpty,
   ArrayUnique,
+  IsDateString,
   IsInt,
   IsNotEmpty,
+  IsOptional,
   IsString,
   Min,
 } from 'class-validator';
@@ -21,4 +23,8 @@ export class AttachCommandDto {
   @IsString()
   @IsNotEmpty()
   public commandNumber: string;
+
+  @IsOptional()
+  @IsDateString()
+  public affectDate: Date;
 }
