@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
+import { IFindResult } from 'src/common/types/find-result.type';
 import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { CreatePrivilegeDto } from './dto/create-privilege.dto';
 import { UpdatePrivilegeDto } from './dto/update-privilege.dto';
@@ -16,7 +17,7 @@ export class PrivilegeService {
     return await this.privilegeRepository.save(createPrivilegeDto);
   }
 
-  async findAll(filters: PrivilegeFilter) {
+  async findAll(filters: PrivilegeFilter): Promise<IFindResult<Privilege>> {
     const where: FindOptionsWhere<Privilege> = {};
 
     if (filters.name) where.name = ILike(filters.name + '%');
@@ -24,7 +25,8 @@ export class PrivilegeService {
     const findOpts = attachPagination<Privilege>(filters);
     findOpts.where = where;
 
-    return await this.privilegeRepository.find(findOpts);
+    const [data, total] = await this.privilegeRepository.findAndCount(findOpts);
+    return { data, total };
   }
 
   async findOne(id: number) {

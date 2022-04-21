@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
+import { IFindResult } from 'src/common/types/find-result.type';
 import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
@@ -16,7 +17,7 @@ export class SubjectService {
     return await this.subjectRepository.save(createSubjectDto);
   }
 
-  async findAll(filters: SubjectFilter) {
+  async findAll(filters: SubjectFilter): Promise<IFindResult<Subject>> {
     const where: FindOptionsWhere<Subject> = {};
 
     if (filters.name) where.name = ILike(filters.name + '%');
@@ -25,7 +26,8 @@ export class SubjectService {
     const findOpts = attachPagination<Subject>(filters);
     findOpts.where = where;
 
-    return await this.subjectRepository.find(findOpts);
+    const [data, total] = await this.subjectRepository.findAndCount(findOpts);
+    return { data, total };
   }
 
   async findOne(id: number) {

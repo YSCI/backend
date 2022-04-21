@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
+import { IFindResult } from 'src/common/types/find-result.type';
 import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { CreateNationalityDto } from './dto/create-nationality.dto';
 import { UpdateNationalityDto } from './dto/update-nationality.dto';
@@ -16,7 +17,7 @@ export class NationalityService {
     return await this.nationalityRepository.save(createNationalityDto);
   }
 
-  async findAll(filters: NationalityFilter) {
+  async findAll(filters: NationalityFilter): Promise<IFindResult<Nationality>> {
     const where: FindOptionsWhere<Nationality> = {};
 
     if (filters.name) where.name = ILike(filters.name + '%');
@@ -24,7 +25,10 @@ export class NationalityService {
     const findOpts = attachPagination<Nationality>(filters);
     findOpts.where = where;
 
-    return await this.nationalityRepository.find(findOpts);
+    const [data, total] = await this.nationalityRepository.findAndCount(
+      findOpts,
+    );
+    return { data, total };
   }
 
   async findOne(id: number) {
