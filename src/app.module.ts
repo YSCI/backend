@@ -11,6 +11,8 @@ import { CommisariatModule } from './commissariat/commissariat.module';
 import config from './common/configs/app.config';
 import { GlobalExceptionFilter } from './common/exceptions/global.exception-filter';
 import { CommunityModule } from './community/community.module';
+import { CurriculumModule } from './curriculum/curriculum.module';
+import { GroupModule } from './group/group.module';
 import { HealthStatusModule } from './health-status/health-status.module';
 import { NationalityModule } from './nationality/nationality.module';
 import { PrivilegeModule } from './privilege/privilege.module';
@@ -56,6 +58,8 @@ import { UserModule } from './user/user.module';
     CommandHistoryModule,
     StudentModule,
     SubjectModule,
+    GroupModule,
+    CurriculumModule,
   ],
   controllers: [],
   providers: [
