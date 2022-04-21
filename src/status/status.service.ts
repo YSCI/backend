@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
+import { IFindResult } from 'src/common/types/find-result.type';
 import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { CreateStatusDto } from './dto/create-status.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
@@ -16,7 +17,7 @@ export class StatusService {
     return await this.statusRepository.save(createStatusDto);
   }
 
-  async findAll(filters: StatusFilter) {
+  async findAll(filters: StatusFilter): Promise<IFindResult<Status>> {
     const where: FindOptionsWhere<Status> = {};
 
     if (filters.name) where.name = ILike(filters.name + '%');
@@ -24,7 +25,8 @@ export class StatusService {
     const findOpts = attachPagination<Status>(filters);
     findOpts.where = where;
 
-    return await this.statusRepository.find(findOpts);
+    const [data, total] = await this.statusRepository.findAndCount(findOpts);
+    return { data, total };
   }
 
   async findOne(id: number) {

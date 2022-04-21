@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
+import { IFindResult } from 'src/common/types/find-result.type';
 import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { CreateCommandDto } from './dto/create-command.dto';
 import { UpdateCommandDto } from './dto/update-command.dto';
@@ -16,7 +17,7 @@ export class CommandService {
     return await this.commandRepository.save(createCommandDto);
   }
 
-  async findAll(filters: CommandFilter) {
+  async findAll(filters: CommandFilter): Promise<IFindResult<Command>> {
     const where: FindOptionsWhere<Command> = {};
 
     if (filters.name) where.name = ILike(filters.name + '%');
@@ -24,7 +25,8 @@ export class CommandService {
     const findOpts = attachPagination<Command>(filters);
     findOpts.where = where;
 
-    return await this.commandRepository.find(findOpts);
+    const [data, total] = await this.commandRepository.findAndCount(findOpts);
+    return { data, total };
   }
 
   async findOne(id: number) {

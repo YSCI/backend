@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IFindResult } from 'src/common/types/find-result.type';
 import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -17,7 +18,7 @@ export class UserService {
     );
   }
 
-  async findAll(filters: UsersFilter) {
+  async findAll(filters: UsersFilter): Promise<IFindResult<User>> {
     const { name, surname, username, limit, offset, orderBy, orderDirection } =
       filters;
     const where: FindOptionsWhere<User> = {};
@@ -34,12 +35,13 @@ export class UserService {
       where.username = ILike(username + '%');
     }
 
-    return await this.userRepository.find({
+    const [data, total] = await this.userRepository.findAndCount({
       where,
       order: { [orderBy]: orderDirection },
       take: limit,
       skip: offset,
     });
+    return { data, total };
   }
 
   async findOne(id: number) {

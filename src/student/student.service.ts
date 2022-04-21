@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
+import { IFindResult } from 'src/common/types/find-result.type';
 import {
   ArrayContains,
   Between,
@@ -23,7 +24,7 @@ export class StudentService {
     return await this.studentRepository.save(createStudentDto);
   }
 
-  async findAll(filters: StudentFilter) {
+  async findAll(filters: StudentFilter): Promise<IFindResult<Student>> {
     const where: FindOptionsWhere<Student> = {};
 
     if (filters.firstname) where.firstname = ILike(filters.firstname + '%');
@@ -95,7 +96,9 @@ export class StudentService {
       },
     };
 
-    return await this.studentRepository.find(findOpts);
+    const [data, total] = await this.studentRepository.findAndCount(findOpts);
+
+    return { data, total };
   }
 
   async findOne(id: number) {

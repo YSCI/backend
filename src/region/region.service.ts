@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
+import { IFindResult } from 'src/common/types/find-result.type';
 import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { CreateRegionDto } from './dto/create-region.dto';
 import { UpdateRegionDto } from './dto/update-region.dto';
@@ -16,7 +17,7 @@ export class RegionService {
     return await this.regionRepository.save(createRegionDto);
   }
 
-  async findAll(filters: RegionFilter) {
+  async findAll(filters: RegionFilter): Promise<IFindResult<Region>> {
     const where: FindOptionsWhere<Region> = {};
 
     if (filters.name) where.name = ILike(filters.name + '%');
@@ -27,7 +28,8 @@ export class RegionService {
       communities: true,
     };
 
-    return await this.regionRepository.find(findOpts);
+    const [data, total] = await this.regionRepository.findAndCount(findOpts);
+    return { data, total };
   }
 
   async findOne(id: number) {
