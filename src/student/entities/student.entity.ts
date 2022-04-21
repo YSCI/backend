@@ -1,4 +1,5 @@
 import { Citizenship } from 'src/citizenship/entities/citizenship.entity';
+import { CommandHistory } from 'src/command-history/entities/command-history.entity';
 import { Commissariat } from 'src/commissariat/entities/commissariat.entity';
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { Community } from 'src/community/entities/community.entity';
@@ -8,7 +9,14 @@ import { Profession } from 'src/profession/entities/profession.entity';
 import { Region } from 'src/region/entities/region.entity';
 import { Status } from 'src/status/entities/status.entity';
 import { Subprivilege } from 'src/subprivilege/entities/subprivilege.entity';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 
 @Entity()
 export class Student extends BaseEntity {
@@ -108,6 +116,9 @@ export class Student extends BaseEntity {
 
   @Column()
   public acceptanceCommandNumber: string;
+
+  @OneToMany(() => CommandHistory, (command) => command.student)
+  public attachedCommands: Array<CommandHistory>;
 
   @Column()
   public currentCourse: number;

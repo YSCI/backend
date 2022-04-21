@@ -73,6 +73,8 @@ export class StudentService {
       where.subprivileges = {
         id: In(filters.subprivileges),
       };
+    if (filters.commandId)
+      where.attachedCommands = { commandId: filters.commandId };
 
     const findOpts = attachPagination<Student>(filters);
 

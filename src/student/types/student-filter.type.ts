@@ -127,6 +127,11 @@ export class StudentFilter extends Pagination {
 
   @IsOptional()
   @IsInt()
+  @Min(1)
+  public commandId: number;
+
+  @IsOptional()
+  @IsInt()
   public currentCourse: number;
 
   @IsOptional()
