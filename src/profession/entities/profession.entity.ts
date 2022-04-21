@@ -1,6 +1,7 @@
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { Student } from 'src/student/entities/student.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
+import { Subject } from '../../subject/entities/subject.entity';
 
 @Entity()
 export class Profession extends BaseEntity {
@@ -24,4 +25,7 @@ export class Profession extends BaseEntity {
 
   @OneToMany(() => Student, (student) => student.commissariat)
   public students: Array<Student>;
+
+  @OneToMany(() => Subject, (subject) => subject.profession)
+  public subjects: Array<Subject>;
 }
