@@ -1,4 +1,9 @@
-import { IsNotEmpty, IsObject, IsOptional, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { UpdateStudentDto } from 'src/student/dto/update-student.dto';
 
 export class CreateCommandDto {
@@ -7,7 +12,6 @@ export class CreateCommandDto {
   public name: string;
 
   @IsOptional()
-  @IsObject()
-  // TODO: add normal validations
+  @ValidateNested()
   public changeableColumns: UpdateStudentDto;
 }

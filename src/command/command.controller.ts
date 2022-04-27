@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -13,9 +14,11 @@ import {
 import { CommandHistoryService } from 'src/command-history/command-history.service';
 import { CommandHistory } from 'src/command-history/entities/command-history.entity';
 import { AttachCommandDto } from 'src/command/dto/attach-command.dto';
+import { PropertyHelpers } from 'src/common/helpers/property.helper';
 import { BatchDelete } from 'src/common/types/batch-delete.type';
 import { IOk } from 'src/common/types/ok.type';
 import { PathParams } from 'src/common/types/path-params.type';
+import { UpdateStudentDto } from 'src/student/dto/update-student.dto';
 import { StudentService } from 'src/student/student.service';
 import { CommandService } from './command.service';
 import { CreateCommandDto } from './dto/create-command.dto';
@@ -86,10 +89,20 @@ export class CommandController {
     }
 
     if (command.changeableColumns) {
-      await this.studentService.update(
-        attachDto.studentIds,
-        command.changeableColumns,
-      );
+      const changeableColumns: UpdateStudentDto = {};
+
+      for (const key in command.changeableColumns) {
+        changeableColumns[key] =
+          attachDto.changeableColumns?.[key] ?? command.changeableColumns[key];
+
+        if (PropertyHelpers.isNullOrUndefined(changeableColumns[key])) {
+          throw new BadRequestException(
+            `You must fill the required column. Column name: ${key}`,
+          );
+        }
+      }
+
+      await this.studentService.update(attachDto.studentIds, changeableColumns);
     }
 
     const studentsCommands = attachDto.studentIds.map<Partial<CommandHistory>>(
