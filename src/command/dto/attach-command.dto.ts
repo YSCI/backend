@@ -7,7 +7,9 @@ import {
   IsOptional,
   IsString,
   Min,
+  ValidateNested,
 } from 'class-validator';
+import { UpdateStudentDto } from 'src/student/dto/update-student.dto';
 
 export class AttachCommandDto {
   @IsInt()
@@ -26,5 +28,9 @@ export class AttachCommandDto {
 
   @IsOptional()
   @IsDateString()
-  public affectDate: Date;
+  public affectDate: string;
+
+  @IsOptional()
+  @ValidateNested()
+  public changeableColumns: UpdateStudentDto;
 }
