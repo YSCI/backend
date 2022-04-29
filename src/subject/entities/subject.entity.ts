@@ -12,4 +12,7 @@ export class Subject extends BaseEntity {
 
   @ManyToOne(() => Profession, (profession) => profession.subjects)
   public profession: Profession;
+
+  @Column('int', { array: true, nullable: true })
+  public semesters: Array<number>;
 }
