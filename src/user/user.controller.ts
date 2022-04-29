@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
 } from '@nestjs/common';
 import { BatchDelete } from 'src/common/types/batch-delete.type';
 import { PathParams } from 'src/common/types/path-params.type';
@@ -21,8 +22,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  async create(@Body() createUserDto: CreateUserDto) {
-    const user = await this.userService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto, @Req() req) {
+    const user = await this.userService.create(createUserDto, req.user.id);
     delete user.password;
 
     return user;
@@ -48,8 +49,9 @@ export class UserController {
   async update(
     @Param() { id }: PathParams,
     @Body() updateUserDto: UpdateUserDto,
+    @Req() req,
   ) {
-    return await this.userService.update(id, updateUserDto);
+    return await this.userService.update(id, updateUserDto, req.user.id);
   }
 
   @Delete()

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
 import { Pagination } from 'src/common/types/pagination.type';
 
 export class UsersFilter extends Pagination {
@@ -16,4 +16,14 @@ export class UsersFilter extends Pagination {
   @IsString()
   @IsNotEmpty()
   public username: string;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  public creatorId: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  public updaterId: number;
 }
