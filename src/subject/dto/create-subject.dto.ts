@@ -1,4 +1,11 @@
-import { IsInt, IsNotEmpty, IsString, Min } from 'class-validator';
+import {
+  ArrayNotEmpty,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 
 export class CreateSubjectDto {
   @IsString()
@@ -8,4 +15,10 @@ export class CreateSubjectDto {
   @IsInt()
   @Min(1)
   public professionId: number;
+
+  @IsOptional()
+  @ArrayNotEmpty()
+  @IsInt({ each: true })
+  @Min(1, { each: true })
+  public semesters: Array<number>;
 }

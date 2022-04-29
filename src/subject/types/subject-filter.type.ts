@@ -11,4 +11,9 @@ export class SubjectFilter extends Pagination {
   @IsInt()
   @Min(1)
   public professionId: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  public semester: number;
 }
