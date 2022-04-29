@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import { BaseEntity } from 'src/common/entities/base.entity';
-import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne } from 'typeorm';
 
 @Entity()
 export class User extends BaseEntity {
@@ -15,6 +15,18 @@ export class User extends BaseEntity {
 
   @Column({ select: false })
   public password: string;
+
+  @Column({ nullable: true })
+  public creatorId: number;
+
+  @ManyToOne(() => User)
+  public creator: User;
+
+  @Column({ nullable: true })
+  public updaterId: number;
+
+  @ManyToOne(() => User)
+  public updater: User;
 
   @BeforeInsert()
   @BeforeUpdate()
