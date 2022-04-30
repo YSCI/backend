@@ -99,9 +99,6 @@ export class CreateStudentDto {
   public acceptanceCommandNumber: string;
 
   @IsInt()
-  public currentCourse: number;
-
-  @IsString()
-  @IsNotEmpty()
-  public currentGroup: string;
+  @Min(1)
+  public groupId: number;
 }
