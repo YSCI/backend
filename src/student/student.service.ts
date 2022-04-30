@@ -56,8 +56,8 @@ export class StudentService {
     if (filters.commissariatId) where.statusId = filters.commissariatId;
     if (filters.acceptanceCommandNumber)
       where.acceptanceCommandNumber = filters.acceptanceCommandNumber;
-    if (filters.currentCourse) where.currentCourse = filters.currentCourse;
-    if (filters.currentGroup) where.currentGroup = filters.currentGroup;
+    if (filters.groupId) where.groupId = filters.groupId;
+    if (filters.semester) where.group = { currentSemester: filters.semester };
     if (filters.dateOfBirthStart && filters.dateOfBirthEnd)
       where.dateOfBirth = Between(
         new Date(filters.dateOfBirthStart),
@@ -91,6 +91,7 @@ export class StudentService {
       healthStatus: true,
       status: true,
       commissariat: true,
+      group: true,
       subprivileges: {
         privilege: true,
       },
@@ -115,6 +116,7 @@ export class StudentService {
         healthStatus: true,
         status: true,
         commissariat: true,
+        group: true,
         subprivileges: {
           privilege: true,
         },

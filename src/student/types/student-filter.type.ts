@@ -132,12 +132,12 @@ export class StudentFilter extends Pagination {
 
   @IsOptional()
   @IsInt()
-  public currentCourse: number;
+  @Min(1)
+  public groupId: number;
 
   @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  public currentGroup: string;
+  @IsInt()
+  public semester: number;
 
   @IsOptional()
   @IsArray()

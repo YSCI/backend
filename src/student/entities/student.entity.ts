@@ -3,6 +3,7 @@ import { CommandHistory } from 'src/command-history/entities/command-history.ent
 import { Commissariat } from 'src/commissariat/entities/commissariat.entity';
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { Community } from 'src/community/entities/community.entity';
+import { Group } from 'src/group/entities/group.entity';
 import { HealthStatus } from 'src/health-status/entities/health-status.entity';
 import { Nationality } from 'src/nationality/entities/nationality.entity';
 import { Profession } from 'src/profession/entities/profession.entity';
@@ -32,25 +33,25 @@ export class Student extends BaseEntity {
   @Column('timestamp with time zone')
   public dateOfBirth: Date;
 
-  @Column()
+  @Column({ nullable: true })
   public registrationRegionId: number;
 
   @ManyToOne(() => Region, (region) => region.registratedStudents)
   public registrationRegion: Region;
 
-  @Column()
+  @Column({ nullable: true })
   public registrationCommunityId: number;
 
   @ManyToOne(() => Community, (community) => community.registratedStudents)
   public registrationCommunity: Community;
 
-  @Column()
+  @Column({ nullable: true })
   public residentRegionId: number;
 
   @ManyToOne(() => Region, (region) => region.residentStudents)
   public residentRegion: Region;
 
-  @Column()
+  @Column({ nullable: true })
   public residentCommunityId: number;
 
   @ManyToOne(() => Community, (community) => community.residentStudents)
@@ -121,8 +122,8 @@ export class Student extends BaseEntity {
   public attachedCommands: Array<CommandHistory>;
 
   @Column()
-  public currentCourse: number;
+  public groupId: number;
 
-  @Column()
-  public currentGroup: string;
+  @ManyToOne(() => Group)
+  public group: Group;
 }
