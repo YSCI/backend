@@ -25,6 +25,7 @@ export class GroupService {
       where.currentSemester = filters.currentSemester;
     if (filters.auditorium) where.auditorium = filters.auditorium;
     if (filters.professionId) where.professionId = filters.professionId;
+    if (filters.openedAt) where.openedAt = filters.openedAt;
 
     const findOpts = attachPagination<Group>(filters);
     findOpts.where = where;

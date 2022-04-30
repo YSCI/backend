@@ -22,4 +22,7 @@ export class Group extends BaseEntity {
 
   @OneToMany(() => Curriculum, (curriculum) => curriculum.group)
   public curriculum: Array<Curriculum>;
+
+  @Column()
+  public openedAt: number;
 }
