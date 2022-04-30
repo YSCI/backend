@@ -30,6 +30,7 @@ export class GroupService {
     findOpts.where = where;
     findOpts.relations = {
       curriculum: true,
+      profession: true,
     };
 
     const [data, total] = await this.groupRepository.findAndCount(findOpts);
@@ -41,6 +42,7 @@ export class GroupService {
       where: { id },
       relations: {
         curriculum: true,
+        profession: true,
       },
     });
 

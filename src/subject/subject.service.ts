@@ -26,21 +26,13 @@ export class SubjectService {
 
     const findOpts = attachPagination<Subject>(filters);
     findOpts.where = where;
-    findOpts.relations = {
-      profession: true,
-    };
 
     const [data, total] = await this.subjectRepository.findAndCount(findOpts);
     return { data, total };
   }
 
   async findOne(id: number) {
-    const [subject] = await this.subjectRepository.find({
-      where: { id },
-      relations: { profession: true },
-    });
-
-    return subject;
+    return await this.subjectRepository.findOneBy({ id });
   }
 
   async update(id: number, updateSubjectDto: UpdateSubjectDto) {
