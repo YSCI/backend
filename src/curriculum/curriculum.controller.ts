@@ -4,6 +4,7 @@ import {
   Delete,
   NotFoundException,
   Param,
+  ParseArrayPipe,
   Post,
   Put,
   Query,
@@ -20,7 +21,10 @@ export class CurriculumController {
   constructor(private readonly curriculumService: CurriculumService) {}
 
   @Post()
-  async create(@Body() createCurriculumDtos: Array<CreateCurriculumDto>) {
+  async create(
+    @Body(new ParseArrayPipe({ items: CreateCurriculumDto }))
+    createCurriculumDtos: Array<CreateCurriculumDto>,
+  ) {
     return await this.curriculumService.create(createCurriculumDtos);
   }
 
