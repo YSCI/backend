@@ -17,6 +17,7 @@ import { HealthStatusModule } from './health-status/health-status.module';
 import { NationalityModule } from './nationality/nationality.module';
 import { PrivilegeModule } from './privilege/privilege.module';
 import { ProfessionModule } from './profession/profession.module';
+import { RatingModule } from './rating/rating.module';
 import { RegionModule } from './region/region.module';
 import { StatusModule } from './status/status.module';
 import { StudentModule } from './student/student.module';
@@ -60,6 +61,7 @@ import { UserModule } from './user/user.module';
     SubjectModule,
     GroupModule,
     CurriculumModule,
+    RatingModule,
   ],
   controllers: [],
   providers: [
