@@ -1,14 +1,23 @@
 import { Citizenship } from 'src/citizenship/entities/citizenship.entity';
+import { CommandHistory } from 'src/command-history/entities/command-history.entity';
 import { Commissariat } from 'src/commissariat/entities/commissariat.entity';
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { Community } from 'src/community/entities/community.entity';
+import { Group } from 'src/group/entities/group.entity';
 import { HealthStatus } from 'src/health-status/entities/health-status.entity';
 import { Nationality } from 'src/nationality/entities/nationality.entity';
 import { Profession } from 'src/profession/entities/profession.entity';
 import { Region } from 'src/region/entities/region.entity';
 import { Status } from 'src/status/entities/status.entity';
 import { Subprivilege } from 'src/subprivilege/entities/subprivilege.entity';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 
 @Entity()
 export class Student extends BaseEntity {
@@ -24,25 +33,25 @@ export class Student extends BaseEntity {
   @Column('timestamp with time zone')
   public dateOfBirth: Date;
 
-  @Column()
+  @Column({ nullable: true })
   public registrationRegionId: number;
 
   @ManyToOne(() => Region, (region) => region.registratedStudents)
   public registrationRegion: Region;
 
-  @Column()
+  @Column({ nullable: true })
   public registrationCommunityId: number;
 
   @ManyToOne(() => Community, (community) => community.registratedStudents)
   public registrationCommunity: Community;
 
-  @Column()
+  @Column({ nullable: true })
   public residentRegionId: number;
 
   @ManyToOne(() => Region, (region) => region.residentStudents)
   public residentRegion: Region;
 
-  @Column()
+  @Column({ nullable: true })
   public residentCommunityId: number;
 
   @ManyToOne(() => Community, (community) => community.residentStudents)
@@ -109,9 +118,12 @@ export class Student extends BaseEntity {
   @Column()
   public acceptanceCommandNumber: string;
 
-  @Column()
-  public currentCourse: number;
+  @OneToMany(() => CommandHistory, (command) => command.student)
+  public attachedCommands: Array<CommandHistory>;
 
   @Column()
-  public currentGroup: string;
+  public groupId: number;
+
+  @ManyToOne(() => Group)
+  public group: Group;
 }

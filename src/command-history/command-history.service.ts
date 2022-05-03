@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
+import { IFindResult } from 'src/common/types/find-result.type';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { CommandHistory } from './entities/command-history.entity';
 import { CommandHistoryFilter } from './types/command-history-filter.type';
@@ -14,7 +15,9 @@ export class CommandHistoryService {
     return await this.commandHistoryRepository.save(commandsToBeAttached);
   }
 
-  async findAll(filters: CommandHistoryFilter) {
+  async findAll(
+    filters: CommandHistoryFilter,
+  ): Promise<IFindResult<CommandHistory>> {
     const where: FindOptionsWhere<CommandHistory> = {};
 
     if (filters.commandId) where.commandId = filters.commandId;
@@ -29,7 +32,10 @@ export class CommandHistoryService {
       user: true,
     };
 
-    return await this.commandHistoryRepository.find(findOpts);
+    const [data, total] = await this.commandHistoryRepository.findAndCount(
+      findOpts,
+    );
+    return { data, total };
   }
 
   async findOne(id: number) {

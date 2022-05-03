@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
+import { IFindResult } from 'src/common/types/find-result.type';
 import {
   ArrayContains,
   Between,
@@ -23,7 +24,7 @@ export class StudentService {
     return await this.studentRepository.save(createStudentDto);
   }
 
-  async findAll(filters: StudentFilter) {
+  async findAll(filters: StudentFilter): Promise<IFindResult<Student>> {
     const where: FindOptionsWhere<Student> = {};
 
     if (filters.firstname) where.firstname = ILike(filters.firstname + '%');
@@ -55,8 +56,8 @@ export class StudentService {
     if (filters.commissariatId) where.statusId = filters.commissariatId;
     if (filters.acceptanceCommandNumber)
       where.acceptanceCommandNumber = filters.acceptanceCommandNumber;
-    if (filters.currentCourse) where.currentCourse = filters.currentCourse;
-    if (filters.currentGroup) where.currentGroup = filters.currentGroup;
+    if (filters.groupId) where.groupId = filters.groupId;
+    if (filters.semester) where.group = { currentSemester: filters.semester };
     if (filters.dateOfBirthStart && filters.dateOfBirthEnd)
       where.dateOfBirth = Between(
         new Date(filters.dateOfBirthStart),
@@ -73,6 +74,8 @@ export class StudentService {
       where.subprivileges = {
         id: In(filters.subprivileges),
       };
+    if (filters.commandId)
+      where.attachedCommands = { commandId: filters.commandId };
 
     const findOpts = attachPagination<Student>(filters);
 
@@ -88,12 +91,15 @@ export class StudentService {
       healthStatus: true,
       status: true,
       commissariat: true,
+      group: true,
       subprivileges: {
         privilege: true,
       },
     };
 
-    return await this.studentRepository.find(findOpts);
+    const [data, total] = await this.studentRepository.findAndCount(findOpts);
+
+    return { data, total };
   }
 
   async findOne(id: number) {
@@ -110,6 +116,7 @@ export class StudentService {
         healthStatus: true,
         status: true,
         commissariat: true,
+        group: true,
         subprivileges: {
           privilege: true,
         },

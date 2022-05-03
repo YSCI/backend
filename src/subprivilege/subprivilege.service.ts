@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
+import { IFindResult } from 'src/common/types/find-result.type';
 import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { CreateSubprivilegeDto } from './dto/create-subprivilege.dto';
 import { UpdateSubprivilegeDto } from './dto/update-subprivilege.dto';
@@ -16,7 +17,9 @@ export class SubprivilegeService {
     return await this.privilegeRepository.save(createPrivilegeDto);
   }
 
-  async findAll(filters: SubprivilegeFilter) {
+  async findAll(
+    filters: SubprivilegeFilter,
+  ): Promise<IFindResult<Subprivilege>> {
     const where: FindOptionsWhere<Subprivilege> = {};
 
     if (filters.name) where.name = ILike(filters.name + '%');
@@ -25,7 +28,8 @@ export class SubprivilegeService {
     const findOpts = attachPagination<Subprivilege>(filters);
     findOpts.where = where;
 
-    return await this.privilegeRepository.find(findOpts);
+    const [data, total] = await this.privilegeRepository.findAndCount(findOpts);
+    return { data, total };
   }
 
   async findOne(id: number) {

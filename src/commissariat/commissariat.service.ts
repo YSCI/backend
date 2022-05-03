@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
+import { IFindResult } from 'src/common/types/find-result.type';
 import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { CreateCommissariatDto } from './dto/create-commissariat.dto';
 import { UpdateCommissariatDto } from './dto/update-commissariat.dto';
@@ -16,7 +17,9 @@ export class CommissariatService {
     return await this.commissariatRepository.save(createCommissariatDto);
   }
 
-  async findAll(filters: CommissariatFilter) {
+  async findAll(
+    filters: CommissariatFilter,
+  ): Promise<IFindResult<Commissariat>> {
     const where: FindOptionsWhere<Commissariat> = {};
 
     if (filters.name) where.name = ILike(filters.name + '%');
@@ -27,7 +30,10 @@ export class CommissariatService {
     const findOpts = attachPagination<Commissariat>(filters);
     findOpts.where = where;
 
-    return await this.commissariatRepository.find(findOpts);
+    const [data, total] = await this.commissariatRepository.findAndCount(
+      findOpts,
+    );
+    return { data, total };
   }
 
   async findOne(id: number) {
