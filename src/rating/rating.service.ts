@@ -21,7 +21,7 @@ export class RatingService {
       .returning('*')
       .execute();
 
-    return insertResult.raw[0] as Rating;
+    return insertResult.raw as Rating;
   }
 
   async remove(ids: number[]) {
