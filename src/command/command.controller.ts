@@ -111,6 +111,9 @@ export class CommandController {
         commandNumber: attachDto.commandNumber,
         studentId: id,
         userId: req.user.id,
+        description: attachDto.description,
+        // TODO: fix type error
+        //affectDate: attachDto.affectDate,
       }),
     );
 

@@ -10,7 +10,7 @@ export class Commissariat extends BaseEntity {
   @Column()
   public number: number;
 
-  @Column()
+  @Column({ nullable: true })
   public description: string;
 
   @OneToMany(() => Student, (student) => student.commissariat)
