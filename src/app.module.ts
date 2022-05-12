@@ -37,7 +37,7 @@ import { UserModule } from './user/user.module';
         const connectionOpts = await getConnectionOptions();
 
         return Object.assign(connectionOpts, {
-          synchronize: isDevelopment,
+          synchronize: false,
           logging: isDevelopment ? true : ['error'],
           logger: isDevelopment ? 'advanced-console' : 'file',
         });

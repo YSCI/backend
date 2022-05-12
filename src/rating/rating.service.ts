@@ -9,15 +9,18 @@ export class RatingService {
   @InjectRepository(Rating)
   private readonly ratingRepository: Repository<Rating>;
 
-  async upsert(upsertRatingDto: Array<UpsertRatingDto>) {
+  async upsert(upsertRatingDtos: Array<UpsertRatingDto>) {
     const insertResult = await this.ratingRepository
       .createQueryBuilder()
       .insert()
-      .values(upsertRatingDto)
-      .orUpdate(
-        ['studentId', 'subjectId', 'semester', 'rate'],
-        ['studentId', 'subjectId', 'semester'],
+      .into(
+        Rating,
+        this.ratingRepository.metadata.ownColumns.map(
+          (column) => column.propertyName,
+        ),
       )
+      .values(upsertRatingDtos)
+      .orUpdate(['studentId', 'subjectId', 'semester', 'rate'], ['id'])
       .returning('*')
       .execute();
 
