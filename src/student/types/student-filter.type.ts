@@ -1,13 +1,17 @@
 import {
   ArrayNotEmpty,
   IsArray,
+  IsBoolean,
+  IsEnum,
   IsInt,
   IsNotEmpty,
   IsNumber,
   IsOptional,
+  IsPositive,
   IsString,
   Min,
 } from 'class-validator';
+import { Gender } from 'src/common/enums/gender.enum';
 import { Pagination } from 'src/common/types/pagination.type';
 
 export class StudentFilter extends Pagination {
@@ -25,6 +29,15 @@ export class StudentFilter extends Pagination {
   @IsString()
   @IsNotEmpty()
   public fathername: string;
+
+  @IsOptional()
+  @IsInt()
+  @IsEnum(Gender)
+  public gender: Gender;
+
+  @IsOptional()
+  @IsBoolean()
+  public hasPension: boolean;
 
   @IsOptional()
   @IsString()
@@ -106,6 +119,11 @@ export class StudentFilter extends Pagination {
   @IsInt()
   @Min(1)
   public statusId: number;
+
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  public educationStatus: number;
 
   @IsOptional()
   @IsInt()
