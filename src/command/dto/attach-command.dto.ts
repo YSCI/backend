@@ -33,4 +33,9 @@ export class AttachCommandDto {
   @IsOptional()
   @ValidateNested()
   public changeableColumns: UpdateStudentDto;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  public description: string;
 }

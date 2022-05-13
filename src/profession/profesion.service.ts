@@ -26,6 +26,8 @@ export class ProfessionService {
     if (filters.yearsCount) where.yearsCount = filters.yearsCount;
     if (filters.number) where.number = filters.number;
     if (filters.fee) where.fee = filters.fee;
+    if (filters.freePlacesCount)
+      where.freePlacesCount = filters.freePlacesCount;
 
     const [data, total] = await this.professionsRepository.findAndCount({
       where,
