@@ -30,6 +30,8 @@ export class StudentService {
     if (filters.firstname) where.firstname = ILike(filters.firstname + '%');
     if (filters.lastname) where.lastname = ILike(filters.lastname + '%');
     if (filters.fathername) where.fathername = ILike(filters.fathername + '%');
+    if (filters.gender) where.gender = filters.gender;
+    if (filters.hasPension) where.hasPension = filters.hasPension;
     if (filters.registrationRegionId)
       where.registrationRegionId = filters.registrationRegionId;
     if (filters.registrationCommunityId)
@@ -53,6 +55,7 @@ export class StudentService {
     if (filters.professionId) where.professionId = filters.professionId;
     if (filters.healthStatusId) where.healthStatusId = filters.healthStatusId;
     if (filters.statusId) where.statusId = filters.statusId;
+    if (filters.educationStatus) where.educationStatus = filters.statusId;
     if (filters.commissariatId) where.statusId = filters.commissariatId;
     if (filters.acceptanceCommandNumber)
       where.acceptanceCommandNumber = filters.acceptanceCommandNumber;

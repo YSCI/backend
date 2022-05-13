@@ -2,6 +2,7 @@ import { Citizenship } from 'src/citizenship/entities/citizenship.entity';
 import { CommandHistory } from 'src/command-history/entities/command-history.entity';
 import { Commissariat } from 'src/commissariat/entities/commissariat.entity';
 import { BaseEntity } from 'src/common/entities/base.entity';
+import { Gender } from 'src/common/enums/gender.enum';
 import { Community } from 'src/community/entities/community.entity';
 import { Group } from 'src/group/entities/group.entity';
 import { HealthStatus } from 'src/health-status/entities/health-status.entity';
@@ -29,6 +30,12 @@ export class Student extends BaseEntity {
 
   @Column()
   public fathername: string;
+
+  @Column('int')
+  public gender: Gender;
+
+  @Column()
+  public hasPension: boolean;
 
   @Column('timestamp with time zone')
   public dateOfBirth: Date;
@@ -101,6 +108,9 @@ export class Student extends BaseEntity {
 
   @ManyToOne(() => Status)
   public status: Status;
+
+  @Column()
+  public educationStatus: number;
 
   @Column()
   public commissariatId?: number;
