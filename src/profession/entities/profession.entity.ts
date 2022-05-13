@@ -23,6 +23,9 @@ export class Profession extends BaseEntity {
   @Column('decimal')
   public fee: string;
 
+  @Column()
+  public freePlacesCount: number;
+
   @OneToMany(() => Student, (student) => student.commissariat)
   public students: Array<Student>;
 
