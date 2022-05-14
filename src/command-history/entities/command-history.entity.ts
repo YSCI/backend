@@ -29,4 +29,7 @@ export class CommandHistory extends BaseEntity {
 
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   public affectDate: Date;
+
+  @Column({ nullable: true })
+  public description: string;
 }

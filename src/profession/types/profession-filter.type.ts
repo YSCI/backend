@@ -3,6 +3,7 @@ import {
   IsInt,
   IsNotEmpty,
   IsOptional,
+  IsPositive,
   IsString,
   Min,
 } from 'class-validator';
@@ -36,4 +37,9 @@ export class ProfessionsFilter extends Pagination {
   @IsOptional()
   @IsDecimal()
   public fee: string;
+
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  public freePlacesCount: number;
 }

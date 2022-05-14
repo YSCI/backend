@@ -1,13 +1,17 @@
 import {
   ArrayNotEmpty,
   IsArray,
+  IsBoolean,
   IsDateString,
+  IsEnum,
   IsInt,
   IsNotEmpty,
   IsOptional,
+  IsPositive,
   IsString,
   Min,
 } from 'class-validator';
+import { Gender } from 'src/common/enums/gender.enum';
 
 export class CreateStudentDto {
   @IsString()
@@ -21,6 +25,13 @@ export class CreateStudentDto {
   @IsString()
   @IsNotEmpty()
   public fathername: string;
+
+  @IsInt()
+  @IsEnum(Gender)
+  public gender: Gender;
+
+  @IsBoolean()
+  public hasPension: boolean;
 
   @IsDateString()
   public dateOfBirth: string;
@@ -86,6 +97,10 @@ export class CreateStudentDto {
   @IsInt()
   @Min(1)
   public statusId: number;
+
+  @IsInt()
+  @IsPositive()
+  public educationStatus: number;
 
   @IsInt()
   @Min(1)

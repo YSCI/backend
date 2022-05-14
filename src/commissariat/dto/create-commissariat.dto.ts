@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateCommissariatDto {
   @IsString()
@@ -8,6 +8,7 @@ export class CreateCommissariatDto {
   @IsInt()
   public number: number;
 
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
   public description: string;
