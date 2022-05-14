@@ -25,7 +25,4 @@ export class Group extends BaseEntity {
 
   @Column()
   public openedAt: number;
-
-  @Column()
-  public test: number;
 }
