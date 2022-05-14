@@ -27,7 +27,7 @@ if (!fs.existsSync(path.join(process.cwd(), 'src', moduleName))) {
 }
 
 const timestamp = Date.now();
-const ls = spawn(`npx`, [
+const ls = spawn('npx', [
   'typeorm',
   'migration:generate',
   `src/${moduleName}/migrations/${name}`,
@@ -39,33 +39,23 @@ const ls = spawn(`npx`, [
 
 ls.stdout.on('data', (data) => {
   const response = data.toString();
-  const regex = new RegExp('Migration (.+) has been generated successfully.');
 
   if (response.startsWith('No changes')) {
     exitWithMessage('No changes in database schema were found', 0);
   }
 
-  if (!regex.test(response)) {
-    exitWithMessage(
-      'Unexpected error occured while parsing generated migration path',
-    );
-  }
-
-  const [, initialPath] = regex.exec(response);
-
-  if (!initialPath) {
-    exitWithMessage(
-      'Migration generation failed. Migration initial path cannot be parsed',
-    );
-  }
-
-  const filename = timestamp + '-'.concat(path.basename(initialPath));
-  const migrationPath = path.join(initialPath, '../', filename);
+  const filename = `${timestamp}-${name}.ts`;
+  const migrationPath = path.join(
+    process.cwd(),
+    'src',
+    moduleName,
+    'migrations',
+    filename,
+  );
 
   const slugifiedName = name
-    .replace(/[A-Z]/g, (s) => '-' + s)
-    .toLowerCase()
-    .slice(1);
+    .replace(/[A-Z]/g, (match, offset) => (offset > 0 ? '-' + match : match))
+    .toLowerCase();
 
   const newFilename = `${timestamp}-${slugifiedName}.migration.ts`;
   const newMigrationPath = migrationPath.replace(filename, newFilename);
