@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { getConnectionOptions } from 'typeorm';
 import { AuthModule } from './auth/auth.module';
 import { CitizenshipModule } from './citizenship/citizenship.module';
 import { CommandHistoryModule } from './command-history/command-history.module';
@@ -12,6 +11,7 @@ import config from './common/configs/app.config';
 import { GlobalExceptionFilter } from './common/exceptions/global.exception-filter';
 import { CommunityModule } from './community/community.module';
 import { CurriculumModule } from './curriculum/curriculum.module';
+import dataSource from './data-source';
 import { GroupModule } from './group/group.module';
 import { HealthStatusModule } from './health-status/health-status.module';
 import { NationalityModule } from './nationality/nationality.module';
@@ -31,13 +31,12 @@ import { UserModule } from './user/user.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (config: ConfigService) => {
+      useFactory: (config: ConfigService) => {
         const isDevelopment =
           config.get<string>('global.environment') === 'development';
-        const connectionOpts = await getConnectionOptions();
 
-        return Object.assign(connectionOpts, {
-          synchronize: false,
+        return Object.assign(dataSource.options, {
+          synchronize: !!process.env.DB_SYNC,
           logging: isDevelopment ? true : ['error'],
           logger: isDevelopment ? 'advanced-console' : 'file',
         });
