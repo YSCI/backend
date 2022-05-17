@@ -1,7 +1,6 @@
 import {
   ArrayNotEmpty,
   IsArray,
-  IsBoolean,
   IsDateString,
   IsEnum,
   IsInt,
@@ -29,9 +28,6 @@ export class CreateStudentDto {
   @IsInt()
   @IsEnum(Gender)
   public gender: Gender;
-
-  @IsBoolean()
-  public hasPension: boolean;
 
   @IsDateString()
   public dateOfBirth: string;

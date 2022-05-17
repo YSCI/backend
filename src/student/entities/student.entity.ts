@@ -9,6 +9,7 @@ import { Group } from 'src/group/entities/group.entity';
 import { HealthStatus } from 'src/health-status/entities/health-status.entity';
 import { Nationality } from 'src/nationality/entities/nationality.entity';
 import { Profession } from 'src/profession/entities/profession.entity';
+import { Rating } from 'src/rating/entities/rating.entity';
 import { Region } from 'src/region/entities/region.entity';
 import { Status } from 'src/status/entities/status.entity';
 import { Subprivilege } from 'src/subprivilege/entities/subprivilege.entity';
@@ -35,7 +36,7 @@ export class Student extends BaseEntity {
   @Column('int')
   public gender: Gender;
 
-  @Column()
+  @Column({ default: false })
   public hasPension: boolean;
 
   @Column('timestamp with time zone')
@@ -137,4 +138,7 @@ export class Student extends BaseEntity {
 
   @ManyToOne(() => Group)
   public group: Group;
+
+  @OneToMany(() => Rating, (rating) => rating.student)
+  public rates: Array<Rating>;
 }
