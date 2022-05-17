@@ -3,7 +3,6 @@ import {
   IsInt,
   IsNotEmpty,
   IsOptional,
-  IsPositive,
   IsString,
   Min,
 } from 'class-validator';
@@ -33,6 +32,6 @@ export class CreateProfessionDto {
   public fee: string;
 
   @IsInt()
-  @IsPositive()
+  @Min(0)
   public freePlacesCount: number;
 }

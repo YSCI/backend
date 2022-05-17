@@ -2,6 +2,7 @@ import { Citizenship } from 'src/citizenship/entities/citizenship.entity';
 import { CommandHistory } from 'src/command-history/entities/command-history.entity';
 import { Commissariat } from 'src/commissariat/entities/commissariat.entity';
 import { BaseEntity } from 'src/common/entities/base.entity';
+import { EducationStatus } from 'src/common/enums/education-status.enum';
 import { Gender } from 'src/common/enums/gender.enum';
 import { Community } from 'src/community/entities/community.entity';
 import { Group } from 'src/group/entities/group.entity';
@@ -109,8 +110,8 @@ export class Student extends BaseEntity {
   @ManyToOne(() => Status)
   public status: Status;
 
-  @Column()
-  public educationStatus: number;
+  @Column('int')
+  public educationStatus: EducationStatus;
 
   @Column()
   public commissariatId?: number;

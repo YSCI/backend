@@ -7,10 +7,10 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
-  IsPositive,
   IsString,
   Min,
 } from 'class-validator';
+import { EducationStatus } from 'src/common/enums/education-status.enum';
 import { Gender } from 'src/common/enums/gender.enum';
 import { Pagination } from 'src/common/types/pagination.type';
 
@@ -122,8 +122,8 @@ export class StudentFilter extends Pagination {
 
   @IsOptional()
   @IsInt()
-  @IsPositive()
-  public educationStatus: number;
+  @Min(0)
+  public educationStatus: EducationStatus;
 
   @IsOptional()
   @IsInt()

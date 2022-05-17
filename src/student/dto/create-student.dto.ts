@@ -7,10 +7,10 @@ import {
   IsInt,
   IsNotEmpty,
   IsOptional,
-  IsPositive,
   IsString,
   Min,
 } from 'class-validator';
+import { EducationStatus } from 'src/common/enums/education-status.enum';
 import { Gender } from 'src/common/enums/gender.enum';
 
 export class CreateStudentDto {
@@ -99,8 +99,8 @@ export class CreateStudentDto {
   public statusId: number;
 
   @IsInt()
-  @IsPositive()
-  public educationStatus: number;
+  @Min(0)
+  public educationStatus: EducationStatus;
 
   @IsInt()
   @Min(1)
