@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -13,6 +14,7 @@ import { BatchDelete } from 'src/common/types/batch-delete.type';
 import { IOk } from 'src/common/types/ok.type';
 import { PathParams } from 'src/common/types/path-params.type';
 import { CreateGroupDto } from './dto/create-group.dto';
+import { SwitchCourseDto } from './dto/switch-course.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { GroupService } from './group.service';
 import { GroupFilter } from './types/group-filter.type';
@@ -63,6 +65,27 @@ export class GroupController {
     if (!result) {
       throw new NotFoundException('Group not found');
     }
+
+    return { ok: true };
+  }
+
+  @Post('switchCourse')
+  async switchCourse(@Body() { groupIds }: SwitchCourseDto) {
+    const groups = await this.groupService.findByIds(groupIds);
+
+    if (!groups.length) {
+      throw new NotFoundException('Group(s) not found');
+    } else if (
+      !groups.every(
+        (group) => group.currentSemester < group.profession.yearsCount * 2,
+      )
+    ) {
+      throw new BadRequestException(
+        'One of these groups has already graduated',
+      );
+    }
+
+    await this.groupService.switchCourse(groupIds);
 
     return { ok: true };
   }
