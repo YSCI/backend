@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
 import { IFindResult } from 'src/common/types/find-result.type';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsWhere, In, Repository } from 'typeorm';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { Group } from './entities/group.entity';
@@ -13,7 +13,7 @@ export class GroupService {
   @InjectRepository(Group)
   private readonly groupRepository: Repository<Group>;
 
-  async create(createGroupDto: Omit<CreateGroupDto, 'curriculum'>) {
+  async create(createGroupDto: CreateGroupDto) {
     return await this.groupRepository.save(createGroupDto);
   }
 
@@ -50,8 +50,31 @@ export class GroupService {
     return group;
   }
 
-  async update(id: number, updateGroupDto: Omit<UpdateGroupDto, 'curriculum'>) {
+  async findByIds(ids: Array<number>, curriculum = false) {
+    return await this.groupRepository.find({
+      where: {
+        id: In(ids),
+      },
+      relations: {
+        profession: true,
+        curriculum,
+      },
+    });
+  }
+
+  async update(id: number, updateGroupDto: UpdateGroupDto) {
     const result = await this.groupRepository.update(id, updateGroupDto);
+
+    return !!result.affected;
+  }
+
+  switchCourse(id: number): Promise<boolean>;
+  switchCourse(ids: number[]): Promise<boolean>;
+
+  async switchCourse(idOrIds: number | number[]) {
+    const result = await this.groupRepository.update(idOrIds, {
+      currentSemester: () => '"currentSemester" + 1',
+    });
 
     return !!result.affected;
   }

@@ -1,11 +1,12 @@
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { Profession } from 'src/profession/entities/profession.entity';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, Unique } from 'typeorm';
 import { Curriculum } from '../../curriculum/entities/curriculum.entity';
 
 @Entity()
+@Unique(['number', 'openedAt'])
 export class Group extends BaseEntity {
-  @Column({ unique: true })
+  @Column()
   public number: string;
 
   @Column()

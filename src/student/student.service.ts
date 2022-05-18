@@ -5,7 +5,6 @@ import { IFindResult } from 'src/common/types/find-result.type';
 import {
   ArrayContains,
   Between,
-  FindOptionsRelations,
   FindOptionsWhere,
   ILike,
   In,
@@ -128,13 +127,6 @@ export class StudentService {
     });
 
     return student;
-  }
-
-  async findBy(
-    where: FindOptionsWhere<Student>,
-    relations?: FindOptionsRelations<Student>,
-  ) {
-    return this.studentRepository.find({ where, relations });
   }
 
   update(id: number, updateStudentDto: UpdateStudentDto): Promise<boolean>;
