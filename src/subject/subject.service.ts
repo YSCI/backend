@@ -23,6 +23,7 @@ export class SubjectService {
     if (filters.name) where.name = ILike(filters.name + '%');
     if (filters.professionId) where.professionId = filters.professionId;
     if (filters.semester) where.semesters = ArrayContains([filters.semester]);
+    if (filters.number) where.number = filters.number;
 
     const findOpts = attachPagination<Subject>(filters);
     findOpts.where = where;

@@ -2,6 +2,7 @@ import {
   ArrayNotEmpty,
   IsInt,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   Min,
@@ -21,4 +22,7 @@ export class CreateSubjectDto {
   @IsInt({ each: true })
   @Min(1, { each: true })
   public semesters: Array<number>;
+
+  @IsNumber()
+  public number: number;
 }
