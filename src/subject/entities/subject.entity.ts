@@ -15,4 +15,7 @@ export class Subject extends BaseEntity {
 
   @Column('int', { array: true, nullable: true })
   public semesters: Array<number>;
+
+  @Column('double precision', { nullable: true })
+  public number: number;
 }
