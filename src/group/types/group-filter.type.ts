@@ -1,4 +1,5 @@
 import {
+  IsDecimal,
   IsInt,
   IsNumberString,
   IsOptional,
@@ -30,4 +31,12 @@ export class GroupFilter extends Pagination {
   @IsInt()
   @IsPositive()
   public openedAt?: number;
+
+  @IsOptional()
+  @IsInt()
+  public freePlacesCount: number;
+
+  @IsOptional()
+  @IsDecimal()
+  public fee: string;
 }

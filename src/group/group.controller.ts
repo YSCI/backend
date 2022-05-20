@@ -13,6 +13,7 @@ import {
 import { BatchDelete } from 'src/common/types/batch-delete.type';
 import { IOk } from 'src/common/types/ok.type';
 import { PathParams } from 'src/common/types/path-params.type';
+import { ProfessionService } from 'src/profession/profesion.service';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { GraduationInfoDto } from './dto/graduation-info.dto';
 import { SwitchSemesterDto } from './dto/switch-course.dto';
@@ -22,11 +23,25 @@ import { GroupFilter } from './types/group-filter.type';
 
 @Controller('group')
 export class GroupController {
-  constructor(private readonly groupService: GroupService) {}
+  constructor(
+    private readonly groupService: GroupService,
+    private readonly professionService: ProfessionService,
+  ) {}
 
   @Post()
   async create(@Body() createGroupDto: CreateGroupDto) {
-    return await this.groupService.create(createGroupDto);
+    const profession = await this.professionService.findOne(
+      createGroupDto.professionId,
+    );
+
+    if (!profession) {
+      throw new NotFoundException('Depended resource does not exists');
+    }
+
+    return await this.groupService.create(createGroupDto, {
+      freePlacesCount: profession.freePlacesCount,
+      fee: profession.fee,
+    });
   }
 
   @Get()
