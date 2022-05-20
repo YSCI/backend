@@ -17,8 +17,11 @@ export class GroupService {
 
   constructor(private readonly studentService: StudentService) {}
 
-  async create(createGroupDto: CreateGroupDto) {
-    return await this.groupRepository.save(createGroupDto);
+  async create(createGroupDto: CreateGroupDto, additional?: Partial<Group>) {
+    return await this.groupRepository.save({
+      ...createGroupDto,
+      ...additional,
+    });
   }
 
   async findAll(filters: GroupFilter): Promise<IFindResult<Group>> {
@@ -30,6 +33,9 @@ export class GroupService {
     if (filters.auditorium) where.auditorium = filters.auditorium;
     if (filters.professionId) where.professionId = filters.professionId;
     if (filters.openedAt) where.openedAt = filters.openedAt;
+    if (filters.freePlacesCount)
+      where.freePlacesCount = filters.freePlacesCount;
+    if (filters.fee) where.fee = filters.fee;
 
     const findOpts = attachPagination<Group>(filters);
     findOpts.where = where;

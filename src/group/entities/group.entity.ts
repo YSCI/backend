@@ -9,7 +9,7 @@ export class Group extends BaseEntity {
   @Column()
   public number: string;
 
-  @Column()
+  @Column({ default: 1 })
   public currentSemester: number;
 
   @Column({ nullable: true })
@@ -26,4 +26,10 @@ export class Group extends BaseEntity {
 
   @Column()
   public openedAt: number;
+
+  @Column({ default: 0 })
+  public freePlacesCount: number;
+
+  @Column('decimal', { default: 0 })
+  public fee: string;
 }
