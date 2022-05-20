@@ -139,6 +139,12 @@ export class Student extends BaseEntity {
   @ManyToOne(() => Group)
   public group: Group;
 
+  @Column({ default: 1 })
+  public currentSemester: number;
+
+  @Column({ default: false })
+  public isFreezed: boolean;
+
   @OneToMany(() => Rating, (rating) => rating.student)
   public rates: Array<Rating>;
 }

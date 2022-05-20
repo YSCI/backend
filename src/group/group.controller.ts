@@ -14,7 +14,8 @@ import { BatchDelete } from 'src/common/types/batch-delete.type';
 import { IOk } from 'src/common/types/ok.type';
 import { PathParams } from 'src/common/types/path-params.type';
 import { CreateGroupDto } from './dto/create-group.dto';
-import { SwitchCourseDto } from './dto/switch-course.dto';
+import { GraduationInfoDto } from './dto/graduation-info.dto';
+import { SwitchSemesterDto } from './dto/switch-course.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { GroupService } from './group.service';
 import { GroupFilter } from './types/group-filter.type';
@@ -69,8 +70,8 @@ export class GroupController {
     return { ok: true };
   }
 
-  @Post('switchCourse')
-  async switchCourse(@Body() { groupIds }: SwitchCourseDto) {
+  @Post('switchSemester')
+  async switchSemester(@Body() { groupIds, isPositive }: SwitchSemesterDto) {
     const groups = await this.groupService.findByIds(groupIds);
 
     if (!groups.length) {
@@ -85,8 +86,15 @@ export class GroupController {
       );
     }
 
-    await this.groupService.switchCourse(groupIds);
+    await this.groupService.switchSemester(groupIds, isPositive);
 
     return { ok: true };
+  }
+
+  @Post('graduate')
+  async graduate(@Body() { groupIds }: GraduationInfoDto) {
+    const result = await this.groupService.graduate(groupIds);
+
+    return result;
   }
 }

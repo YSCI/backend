@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
 import { IFindResult } from 'src/common/types/find-result.type';
+import { UpdateDto } from 'src/common/types/update-dto.type';
 import {
   ArrayContains,
   Between,
@@ -60,7 +61,7 @@ export class StudentService {
     if (filters.acceptanceCommandNumber)
       where.acceptanceCommandNumber = filters.acceptanceCommandNumber;
     if (filters.groupId) where.groupId = filters.groupId;
-    if (filters.semester) where.group = { currentSemester: filters.semester };
+    if (filters.semester) where.currentSemester = filters.semester;
     if (filters.dateOfBirthStart && filters.dateOfBirthEnd)
       where.dateOfBirth = Between(
         new Date(filters.dateOfBirthStart),
@@ -79,6 +80,8 @@ export class StudentService {
       };
     if (filters.commandId)
       where.attachedCommands = { commandId: filters.commandId };
+
+    where.isFreezed = filters.isFreezed ?? false;
 
     const findOpts = attachPagination<Student>(filters);
 
@@ -129,16 +132,29 @@ export class StudentService {
     return student;
   }
 
-  update(id: number, updateStudentDto: UpdateStudentDto): Promise<boolean>;
-  update(ids: number[], updateStudentDto: UpdateStudentDto): Promise<boolean>;
-
-  async update(idOrIds: number | number[], updateStudentDto: UpdateStudentDto) {
+  async update(
+    criteria: number | number[] | FindOptionsWhere<Student>,
+    updateStudentDto: UpdateDto<UpdateStudentDto | { isFreezed: boolean }>,
+  ) {
     const result = await this.studentRepository.update(
-      idOrIds,
+      criteria,
       updateStudentDto,
     );
 
     return !!result.affected;
+  }
+
+  async switchSemester(criteria: FindOptionsWhere<Student>, isPositive = true) {
+    return await this.update(criteria, {
+      currentSemester: () => `"currentSemester" ${isPositive ? '+' : '-'} 1`,
+    });
+  }
+
+  async graduate(criteria: FindOptionsWhere<Student>) {
+    return await this.update(criteria, {
+      currentSemester: -1,
+      isFreezed: true,
+    });
   }
 
   async remove(ids: number[]) {

@@ -2,7 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
 import { IFindResult } from 'src/common/types/find-result.type';
-import { FindOptionsWhere, In, Repository } from 'typeorm';
+import { UpdateDto } from 'src/common/types/update-dto.type';
+import { StudentService } from 'src/student/student.service';
+import { FindOptionsWhere, In, Not, Repository } from 'typeorm';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { Group } from './entities/group.entity';
@@ -12,6 +14,8 @@ import { GroupFilter } from './types/group-filter.type';
 export class GroupService {
   @InjectRepository(Group)
   private readonly groupRepository: Repository<Group>;
+
+  constructor(private readonly studentService: StudentService) {}
 
   async create(createGroupDto: CreateGroupDto) {
     return await this.groupRepository.save(createGroupDto);
@@ -62,21 +66,53 @@ export class GroupService {
     });
   }
 
-  async update(id: number, updateGroupDto: UpdateGroupDto) {
-    const result = await this.groupRepository.update(id, updateGroupDto);
+  async update(
+    criteria: number | number[] | FindOptionsWhere<Group>,
+    updateGroupDto: UpdateDto<UpdateGroupDto>,
+  ) {
+    const result = await this.groupRepository.update(criteria, updateGroupDto);
 
     return !!result.affected;
   }
 
-  switchCourse(id: number): Promise<boolean>;
-  switchCourse(ids: number[]): Promise<boolean>;
-
-  async switchCourse(idOrIds: number | number[]) {
-    const result = await this.groupRepository.update(idOrIds, {
-      currentSemester: () => '"currentSemester" + 1',
+  async switchSemester(idOrIds: number | number[], isPositive = true) {
+    const result = await this.update(idOrIds, {
+      currentSemester: () => `"currentSemester" ${isPositive ? '+' : '-'} 1`,
     });
 
-    return !!result.affected;
+    if (result) {
+      await this.studentService.switchSemester(
+        {
+          groupId: Array.isArray(idOrIds) ? In(idOrIds) : idOrIds,
+          isFreezed: false,
+        },
+        isPositive,
+      );
+    }
+
+    return result;
+  }
+
+  async graduate(groupIdOrIds: number | number[]) {
+    const result = await this.update(
+      {
+        id: Array.isArray(groupIdOrIds) ? In(groupIdOrIds) : groupIdOrIds,
+        currentSemester: Not(-1),
+      },
+      {
+        currentSemester: -1,
+      },
+    );
+
+    if (result) {
+      await this.studentService.graduate({
+        groupId: Array.isArray(groupIdOrIds) ? In(groupIdOrIds) : groupIdOrIds,
+        currentSemester: Not(-1),
+        isFreezed: false,
+      });
+    }
+
+    return true;
   }
 
   async remove(ids: number[]) {

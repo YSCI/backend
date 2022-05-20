@@ -112,4 +112,8 @@ export class CreateStudentDto {
   @IsInt()
   @Min(1)
   public groupId: number;
+
+  @IsInt()
+  @Min(1)
+  public currentSemester: number;
 }
