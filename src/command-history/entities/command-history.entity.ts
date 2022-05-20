@@ -15,7 +15,7 @@ export class CommandHistory extends BaseEntity {
   @Column()
   public studentId: number;
 
-  @ManyToOne(() => Student)
+  @ManyToOne(() => Student, { onDelete: 'CASCADE' })
   public student?: Student;
 
   @Column()
