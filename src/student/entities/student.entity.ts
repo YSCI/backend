@@ -8,7 +8,6 @@ import { Community } from 'src/community/entities/community.entity';
 import { Group } from 'src/group/entities/group.entity';
 import { HealthStatus } from 'src/health-status/entities/health-status.entity';
 import { Nationality } from 'src/nationality/entities/nationality.entity';
-import { Profession } from 'src/profession/entities/profession.entity';
 import { Rating } from 'src/rating/entities/rating.entity';
 import { Region } from 'src/region/entities/region.entity';
 import { Status } from 'src/status/entities/status.entity';
@@ -94,12 +93,6 @@ export class Student extends BaseEntity {
   public nationality: Nationality;
 
   @Column()
-  public professionId?: number;
-
-  @ManyToOne(() => Profession, (profession) => profession.students)
-  public profession: Profession;
-
-  @Column()
   public healthStatusId?: number;
 
   @ManyToOne(() => HealthStatus)
@@ -114,7 +107,7 @@ export class Student extends BaseEntity {
   @Column('int')
   public educationStatus: EducationStatus;
 
-  @Column()
+  @Column({ nullable: true })
   public commissariatId?: number;
 
   @ManyToOne(() => Commissariat, (commissariat) => commissariat.students)

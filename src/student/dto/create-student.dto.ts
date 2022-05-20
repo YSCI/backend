@@ -8,6 +8,7 @@ import {
   IsOptional,
   IsString,
   Min,
+  ValidateIf,
 } from 'class-validator';
 import { EducationStatus } from 'src/common/enums/education-status.enum';
 import { Gender } from 'src/common/enums/gender.enum';
@@ -84,10 +85,6 @@ export class CreateStudentDto {
 
   @IsInt()
   @Min(1)
-  public professionId: number;
-
-  @IsInt()
-  @Min(1)
   public healthStatusId: number;
 
   @IsInt()
@@ -98,6 +95,7 @@ export class CreateStudentDto {
   @Min(0)
   public educationStatus: EducationStatus;
 
+  @ValidateIf((object) => object.gender === Gender.Male)
   @IsInt()
   @Min(1)
   public commissariatId: number;
@@ -113,6 +111,7 @@ export class CreateStudentDto {
   @Min(1)
   public groupId: number;
 
+  @IsOptional()
   @IsInt()
   @Min(1)
   public currentSemester: number;

@@ -53,7 +53,8 @@ export class StudentService {
       where.socialCardNumber = filters.socialCardNumber;
     if (filters.citizenshipId) where.citizenshipId = filters.citizenshipId;
     if (filters.nationalityId) where.nationalityId = filters.nationalityId;
-    if (filters.professionId) where.professionId = filters.professionId;
+    if (filters.professionId)
+      where.group = { professionId: filters.professionId };
     if (filters.healthStatusId) where.healthStatusId = filters.healthStatusId;
     if (filters.statusId) where.statusId = filters.statusId;
     if (filters.educationStatus) where.educationStatus = filters.statusId;
@@ -93,7 +94,6 @@ export class StudentService {
       residentCommunity: true,
       residentRegion: true,
       nationality: true,
-      profession: true,
       healthStatus: true,
       status: true,
       commissariat: true,
@@ -118,7 +118,6 @@ export class StudentService {
         residentCommunity: true,
         residentRegion: true,
         nationality: true,
-        profession: true,
         healthStatus: true,
         status: true,
         commissariat: true,
