@@ -86,7 +86,9 @@ export class GroupController {
   }
 
   @Post('switchSemester')
-  async switchSemester(@Body() { groupIds, isPositive }: SwitchSemesterDto) {
+  async switchSemester(
+    @Body() { groupIds, isPositive }: SwitchSemesterDto,
+  ): Promise<IOk> {
     const groups = await this.groupService.findByIds(groupIds);
 
     if (!groups.length) {
@@ -110,6 +112,6 @@ export class GroupController {
   async graduate(@Body() { groupIds }: GraduationInfoDto) {
     const result = await this.groupService.graduate(groupIds);
 
-    return result;
+    return { ok: result };
   }
 }

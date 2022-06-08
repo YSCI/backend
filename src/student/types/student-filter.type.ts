@@ -149,10 +149,6 @@ export class StudentFilter extends Pagination {
   public commandId: number;
 
   @IsOptional()
-  @IsBoolean()
-  public isFreezed: boolean;
-
-  @IsOptional()
   @IsInt()
   @Min(1)
   public groupId: number;
