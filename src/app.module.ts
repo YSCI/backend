@@ -20,6 +20,7 @@ import { PrivilegeModule } from './privilege/privilege.module';
 import { ProfessionModule } from './profession/profession.module';
 import { RatingModule } from './rating/rating.module';
 import { RegionModule } from './region/region.module';
+import { RotationModule } from './rotation/rotation.module';
 import { StatusModule } from './status/status.module';
 import { StudentModule } from './student/student.module';
 import { SubjectModule } from './subject/subject.module';
@@ -62,6 +63,7 @@ import { UserModule } from './user/user.module';
     GroupModule,
     CurriculumModule,
     RatingModule,
+    RotationModule,
   ],
   controllers: [],
   providers: [

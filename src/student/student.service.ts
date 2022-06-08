@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { OrderDirection } from 'src/common/enums/order-direction.enum';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
 import { IFindResult } from 'src/common/types/find-result.type';
 import { UpdateDto } from 'src/common/types/update-dto.type';
+import { RotationFilter } from 'src/rotation/types/rotation-filter.type';
 import {
   ArrayContains,
   Between,
   FindOptionsWhere,
   ILike,
   In,
+  Not,
   Repository,
 } from 'typeorm';
 import { CreateStudentDto } from './dto/create-student.dto';
@@ -25,7 +28,9 @@ export class StudentService {
     return await this.studentRepository.save(createStudentDto);
   }
 
-  async findAll(filters: StudentFilter): Promise<IFindResult<Student>> {
+  async findAll(
+    filters: Partial<StudentFilter>,
+  ): Promise<IFindResult<Student>> {
     const where: FindOptionsWhere<Student> = {};
 
     if (filters.firstname) where.firstname = ILike(filters.firstname + '%');
@@ -82,8 +87,6 @@ export class StudentService {
     if (filters.commandId)
       where.attachedCommands = { commandId: filters.commandId };
 
-    where.isFreezed = filters.isFreezed ?? false;
-
     const findOpts = attachPagination<Student>(filters);
 
     findOpts.where = where;
@@ -107,6 +110,44 @@ export class StudentService {
 
     const [data, total] = await this.studentRepository.findAndCount(findOpts);
 
+    return { data, total };
+  }
+
+  async getRotatableStudentsWithRatingsAndTotalCount(
+    filters: RotationFilter,
+    isExport = false,
+  ): Promise<IFindResult<Partial<Student>>> {
+    const opts = attachPagination<Student>(filters);
+
+    opts.select = {
+      id: true,
+      firstname: true,
+      lastname: true,
+      fathername: true,
+      groupId: true,
+      educationStatus: true,
+      rates: {
+        id: true,
+        rate: true,
+        semester: true,
+        subject: {
+          name: true,
+        },
+      },
+    };
+    opts.where = {
+      currentSemester: Not(-1),
+      isFreezed: false,
+      rates: {
+        semester: In(filters.semestersForCalculation),
+      },
+    };
+    opts.order.educationStatus = OrderDirection.DESC;
+    opts.relations = {
+      rates: isExport ? { subject: true } : true,
+    };
+
+    const [data, total] = await this.studentRepository.findAndCount(opts);
     return { data, total };
   }
 
@@ -145,17 +186,31 @@ export class StudentService {
     return !!result.affected;
   }
 
-  async switchSemester(criteria: FindOptionsWhere<Student>, isPositive = true) {
-    return await this.update(criteria, {
-      currentSemester: () => `"currentSemester" ${isPositive ? '+' : '-'} 1`,
-    });
+  async switchSemesterByGroupIds(groupIds: number[], isPositive = true) {
+    return await this.update(
+      {
+        groupId: In(groupIds),
+        currentSemester: Not(-1),
+        isFreezed: false,
+      },
+      {
+        currentSemester: () => `"currentSemester" ${isPositive ? '+' : '-'} 1`,
+      },
+    );
   }
 
-  async graduate(criteria: FindOptionsWhere<Student>) {
-    return await this.update(criteria, {
-      currentSemester: -1,
-      isFreezed: true,
-    });
+  async graduateByGroupIds(groupIds: number[]) {
+    return await this.update(
+      {
+        groupId: In(groupIds),
+        currentSemester: Not(-1),
+        isFreezed: false,
+      },
+      {
+        currentSemester: -1,
+        isFreezed: true,
+      },
+    );
   }
 
   async remove(ids: number[]) {

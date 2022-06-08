@@ -48,14 +48,18 @@ export class GroupService {
     return { data, total };
   }
 
-  async findOne(id: number) {
-    const [group] = await this.groupRepository.find({
-      where: { id },
-      relations: {
-        curriculum: true,
-        profession: true,
-      },
-    });
+  async findOne(id: number, withJoins = true) {
+    const [group] = await this.groupRepository.find(
+      withJoins
+        ? {
+            where: { id },
+            relations: {
+              curriculum: true,
+              profession: true,
+            },
+          }
+        : {},
+    );
 
     return group;
   }
@@ -81,28 +85,28 @@ export class GroupService {
     return !!result.affected;
   }
 
-  async switchSemester(idOrIds: number | number[], isPositive = true) {
-    const result = await this.update(idOrIds, {
-      currentSemester: () => `"currentSemester" ${isPositive ? '+' : '-'} 1`,
-    });
+  async switchSemester(groupIds: number[], isPositive = true) {
+    const result = await this.update(
+      {
+        id: In(groupIds),
+        currentSemester: Not(-1),
+      },
+      {
+        currentSemester: () => `"currentSemester" ${isPositive ? '+' : '-'} 1`,
+      },
+    );
 
     if (result) {
-      await this.studentService.switchSemester(
-        {
-          groupId: Array.isArray(idOrIds) ? In(idOrIds) : idOrIds,
-          isFreezed: false,
-        },
-        isPositive,
-      );
+      await this.studentService.switchSemesterByGroupIds(groupIds, isPositive);
     }
 
     return result;
   }
 
-  async graduate(groupIdOrIds: number | number[]) {
+  async graduate(groupIds: number[]) {
     const result = await this.update(
       {
-        id: Array.isArray(groupIdOrIds) ? In(groupIdOrIds) : groupIdOrIds,
+        id: In(groupIds),
         currentSemester: Not(-1),
       },
       {
@@ -111,11 +115,7 @@ export class GroupService {
     );
 
     if (result) {
-      await this.studentService.graduate({
-        groupId: Array.isArray(groupIdOrIds) ? In(groupIdOrIds) : groupIdOrIds,
-        currentSemester: Not(-1),
-        isFreezed: false,
-      });
+      await this.studentService.graduateByGroupIds(groupIds);
     }
 
     return true;
