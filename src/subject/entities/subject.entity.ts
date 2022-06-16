@@ -1,10 +1,11 @@
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { Profession } from 'src/profession/entities/profession.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, Unique } from 'typeorm';
 
 @Entity()
+@Unique(['name', 'professionId'])
 export class Subject extends BaseEntity {
-  @Column({ unique: true })
+  @Column()
   public name: string;
 
   @Column()
