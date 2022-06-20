@@ -16,6 +16,7 @@ import dataSource from './data-source';
 import { GroupModule } from './group/group.module';
 import { HealthStatusModule } from './health-status/health-status.module';
 import { NationalityModule } from './nationality/nationality.module';
+import { PensionModule } from './pension/pension.module';
 import { PrivilegeModule } from './privilege/privilege.module';
 import { ProfessionModule } from './profession/profession.module';
 import { RatingModule } from './rating/rating.module';
@@ -64,6 +65,7 @@ import { UserModule } from './user/user.module';
     CurriculumModule,
     RatingModule,
     RotationModule,
+    PensionModule,
   ],
   controllers: [],
   providers: [

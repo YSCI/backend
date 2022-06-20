@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { OrderDirection } from 'src/common/enums/order-direction.enum';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
 import { IFindResult } from 'src/common/types/find-result.type';
+import { RotationFilter } from 'src/common/types/rotation-filter.type';
 import { UpdateDto } from 'src/common/types/update-dto.type';
-import { RotationFilter } from 'src/rotation/types/rotation-filter.type';
 import {
   ArrayContains,
   Between,
@@ -115,7 +115,7 @@ export class StudentService {
 
   async getRotatableStudentsWithRatingsAndTotalCount(
     filters: RotationFilter,
-    isExport = false,
+    withSubjects = false,
   ): Promise<IFindResult<Partial<Student>>> {
     const opts = attachPagination<Student>(filters);
 
@@ -131,6 +131,7 @@ export class StudentService {
         rate: true,
         semester: true,
         subject: {
+          id: true,
           name: true,
         },
       },
@@ -144,7 +145,7 @@ export class StudentService {
     };
     opts.order.educationStatus = OrderDirection.DESC;
     opts.relations = {
-      rates: isExport ? { subject: true } : true,
+      rates: withSubjects ? { subject: true } : true,
     };
 
     const [data, total] = await this.studentRepository.findAndCount(opts);
@@ -176,7 +177,9 @@ export class StudentService {
 
   async update(
     criteria: number | number[] | FindOptionsWhere<Student>,
-    updateStudentDto: UpdateDto<UpdateStudentDto | { isFreezed: boolean }>,
+    updateStudentDto: UpdateDto<
+      UpdateStudentDto | { isFreezed?: boolean; hasPension?: boolean }
+    >,
   ) {
     const result = await this.studentRepository.update(
       criteria,
