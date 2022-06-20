@@ -8,9 +8,9 @@ import { IFindResult } from 'src/common/types/find-result.type';
 import { GroupService } from 'src/group/group.service';
 import { StudentService } from 'src/student/student.service';
 import { In, Not } from 'typeorm';
-import { RotationAdditionalData } from './types/rotation-additional-data.dto';
+import { RotationAdditionalData } from './dto/rotation-additional-data.dto';
 // import { StudentRotationDto } from './dto/student-rotation-info.dto';
-import { RotationFilter } from './types/rotation-filter.type';
+import { RotationFilter } from '../common/types/rotation-filter.type';
 import { StudentRotationInfo } from './types/student-rotation-info.type';
 
 @Injectable()
