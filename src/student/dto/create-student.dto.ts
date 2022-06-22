@@ -92,7 +92,7 @@ export class CreateStudentDto {
   public statusId: number;
 
   @IsInt()
-  @Min(0)
+  @IsEnum(EducationStatus)
   public educationStatus: EducationStatus;
 
   @ValidateIf((object) => object.gender === Gender.Male)
