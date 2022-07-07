@@ -1,7 +1,7 @@
 import {
   ArrayNotEmpty,
   ArrayUnique,
-  IsDateString,
+  IsDate,
   IsInt,
   IsNotEmpty,
   IsOptional,
@@ -27,8 +27,8 @@ export class AttachCommandDto {
   public commandNumber: string;
 
   @IsOptional()
-  @IsDateString()
-  public affectDate: string;
+  @IsDate()
+  public affectDate: Date;
 
   @IsOptional()
   @ValidateNested()

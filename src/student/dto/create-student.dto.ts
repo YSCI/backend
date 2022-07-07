@@ -1,7 +1,7 @@
 import {
   ArrayNotEmpty,
   IsArray,
-  IsDateString,
+  IsDate,
   IsEnum,
   IsInt,
   IsNotEmpty,
@@ -30,8 +30,8 @@ export class CreateStudentDto {
   @IsEnum(Gender)
   public gender: Gender;
 
-  @IsDateString()
-  public dateOfBirth: string;
+  @IsDate()
+  public dateOfBirth: Date;
 
   @IsOptional()
   @IsInt()
@@ -100,8 +100,8 @@ export class CreateStudentDto {
   @Min(1)
   public commissariatId: number;
 
-  @IsDateString()
-  public dateOfAcceptance: string;
+  @IsDate()
+  public dateOfAcceptance: Date;
 
   @IsString()
   @IsNotEmpty()

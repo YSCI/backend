@@ -2,10 +2,10 @@ import {
   ArrayNotEmpty,
   IsArray,
   IsBoolean,
+  IsDate,
   IsEnum,
   IsInt,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsString,
   Min,
@@ -40,14 +40,12 @@ export class StudentFilter extends Pagination {
   public hasPension: boolean;
 
   @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  public dateOfBirthStart: string;
+  @IsDate()
+  public dateOfBirthStart: Date;
 
   @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  public dateOfBirthEnd: string;
+  @IsDate()
+  public dateOfBirthEnd: Date;
 
   @IsOptional()
   @IsInt()
@@ -131,12 +129,20 @@ export class StudentFilter extends Pagination {
   public commissariatId: number;
 
   @IsOptional()
-  @IsNumber()
-  public dateOfAcceptanceStart: number;
+  @IsDate()
+  public dateOfAcceptanceStart: Date;
 
   @IsOptional()
-  @IsNumber()
-  public dateOfAcceptanceEnd: number;
+  @IsDate()
+  public dateOfAcceptanceEnd: Date;
+
+  @IsOptional()
+  @IsDate()
+  public commandStartDate: Date = new Date('1955');
+
+  @IsOptional()
+  @IsDate()
+  public commandEndDate: Date = new Date();
 
   @IsOptional()
   @IsString()

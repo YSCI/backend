@@ -70,13 +70,13 @@ export class StudentService {
     if (filters.semester) where.currentSemester = filters.semester;
     if (filters.dateOfBirthStart && filters.dateOfBirthEnd)
       where.dateOfBirth = Between(
-        new Date(filters.dateOfBirthStart),
-        new Date(filters.dateOfBirthEnd),
+        filters.dateOfBirthStart,
+        filters.dateOfBirthEnd,
       );
     if (filters.dateOfAcceptanceStart && filters.dateOfAcceptanceEnd)
       where.dateOfAcceptance = Between(
-        new Date(filters.dateOfAcceptanceStart),
-        new Date(filters.dateOfAcceptanceEnd),
+        filters.dateOfAcceptanceStart,
+        filters.dateOfAcceptanceEnd,
       );
     if (filters.contactNumber)
       where.contactNumbers = ArrayContains([filters.contactNumber]);
@@ -85,7 +85,10 @@ export class StudentService {
         id: In(filters.subprivileges),
       };
     if (filters.commandId)
-      where.attachedCommands = { commandId: filters.commandId };
+      where.attachedCommands = {
+        commandId: filters.commandId,
+        affectDate: Between(filters.commandStartDate, filters.commandEndDate),
+      };
 
     const findOpts = attachPagination<Student>(filters);
 
@@ -141,6 +144,11 @@ export class StudentService {
       isFreezed: false,
       rates: {
         semester: In(filters.semestersForCalculation),
+      },
+      group: {
+        profession: {
+          id: filters.professionId,
+        },
       },
     };
     opts.order.educationStatus = OrderDirection.DESC;
