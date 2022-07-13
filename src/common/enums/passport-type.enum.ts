@@ -1,4 +1,8 @@
 export enum PassportType {
-  International,
-  IDCard,
+  BirthCertificate,
+  RAPassport,
+  IdentificationCard,
+  BiometricPassport,
+  ForeignPassport,
+  ResidenceCard
 }

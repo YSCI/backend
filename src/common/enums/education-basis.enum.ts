@@ -1,4 +1,7 @@
 export enum EducationBasis {
-  From9,
-  From12,
+  BasicEducation,
+  SecondaryEducation,
+  PreProfessionalEducation,
+  VocationalEducation,
+  HighlyProfessionalEducation
 }
