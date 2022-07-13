@@ -7,11 +7,14 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  MaxLength,
   Min,
   ValidateIf,
 } from 'class-validator';
+import { EducationBasis } from 'src/common/enums/education-basis.enum';
 import { EducationStatus } from 'src/common/enums/education-status.enum';
 import { Gender } from 'src/common/enums/gender.enum';
+import { PassportType } from 'src/common/enums/passport-type.enum';
 
 export class CreateStudentDto {
   @IsString()
@@ -65,6 +68,18 @@ export class CreateStudentDto {
   @IsNotEmpty()
   public passportSeries: string;
 
+  @IsDate()
+  public passportDateOfIssue: Date;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(3)
+  public passportIssuedBy: string;
+
+  @IsInt()
+  @IsEnum(PassportType)
+  public passportType: PassportType;
+
   @IsInt()
   @Min(1)
   @IsNotEmpty()
@@ -74,6 +89,10 @@ export class CreateStudentDto {
   @ArrayNotEmpty()
   @IsString({ each: true })
   public contactNumbers: Array<string>;
+
+  @IsInt()
+  @IsEnum(EducationBasis)
+  public educationBasis: EducationBasis;
 
   @IsInt()
   @Min(1)
