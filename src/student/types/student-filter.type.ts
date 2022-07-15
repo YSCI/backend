@@ -8,10 +8,13 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  MaxLength,
   Min,
 } from 'class-validator';
+import { EducationBasis } from 'src/common/enums/education-basis.enum';
 import { EducationStatus } from 'src/common/enums/education-status.enum';
 import { Gender } from 'src/common/enums/gender.enum';
+import { PassportType } from 'src/common/enums/passport-type.enum';
 import { Pagination } from 'src/common/types/pagination.type';
 
 export class StudentFilter extends Pagination {
@@ -83,6 +86,25 @@ export class StudentFilter extends Pagination {
   public passportSeries: string;
 
   @IsOptional()
+  @IsDate()
+  public passportDateOfIssueStart: Date = new Date('1990');
+
+  @IsOptional()
+  @IsDate()
+  public passportDateOfIssueEnd: Date = new Date();
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(3)
+  public passportIssuedBy: string;
+
+  @IsOptional()
+  @IsInt()
+  @IsEnum(PassportType)
+  public passportType: PassportType;
+
+  @IsOptional()
   @IsInt()
   @Min(1)
   @IsNotEmpty()
@@ -92,6 +114,10 @@ export class StudentFilter extends Pagination {
   @IsString()
   @IsNotEmpty()
   public contactNumber: string;
+
+  @IsOptional()
+  @IsEnum(EducationBasis)
+  public educationBasis: EducationBasis;
 
   @IsOptional()
   @IsInt()

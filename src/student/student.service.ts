@@ -54,8 +54,17 @@ export class StudentService {
       where.residentAddress = ILike('%' + filters.residentAddress + '%');
     if (filters.passportSeries)
       where.passportSeries = ILike(filters.passportSeries + '%');
+    if (filters.passportType) {
+      where.passportType = filters.passportType;
+    }
+    if (filters.passportIssuedBy) {
+      where.passportIssuedBy = filters.passportIssuedBy;
+    }
     if (filters.socialCardNumber)
       where.socialCardNumber = filters.socialCardNumber;
+    if (filters.educationBasis) {
+      where.educationBasis = filters.educationBasis;
+    }
     if (filters.citizenshipId) where.citizenshipId = filters.citizenshipId;
     if (filters.nationalityId) where.nationalityId = filters.nationalityId;
     if (filters.professionId)
@@ -89,6 +98,10 @@ export class StudentService {
         commandId: filters.commandId,
         affectDate: Between(filters.commandStartDate, filters.commandEndDate),
       };
+    where.passportDateOfIssue = Between(
+      filters.passportDateOfIssueStart,
+      filters.passportDateOfIssueEnd,
+    );
 
     const findOpts = attachPagination<Student>(filters);
 

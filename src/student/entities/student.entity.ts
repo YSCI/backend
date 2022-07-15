@@ -2,8 +2,10 @@ import { Citizenship } from 'src/citizenship/entities/citizenship.entity';
 import { CommandHistory } from 'src/command-history/entities/command-history.entity';
 import { Commissariat } from 'src/commissariat/entities/commissariat.entity';
 import { BaseEntity } from 'src/common/entities/base.entity';
+import { EducationBasis } from 'src/common/enums/education-basis.enum';
 import { EducationStatus } from 'src/common/enums/education-status.enum';
 import { Gender } from 'src/common/enums/gender.enum';
+import { PassportType } from 'src/common/enums/passport-type.enum';
 import { Community } from 'src/community/entities/community.entity';
 import { Group } from 'src/group/entities/group.entity';
 import { HealthStatus } from 'src/health-status/entities/health-status.entity';
@@ -74,11 +76,23 @@ export class Student extends BaseEntity {
   @Column({ unique: true })
   public passportSeries: string;
 
+  @Column()
+  public passportDateOfIssue: Date;
+
+  @Column()
+  public passportIssuedBy: string;
+
+  @Column()
+  public passportType: PassportType;
+
   @Column({ unique: true })
   public socialCardNumber: number;
 
   @Column('varchar', { array: true })
   public contactNumbers: Array<string>;
+
+  @Column()
+  public educationBasis: EducationBasis;
 
   @Column()
   public citizenshipId?: number;
