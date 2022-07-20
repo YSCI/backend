@@ -1,4 +1,11 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
+import {
+  IsBoolean,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 import { Pagination } from 'src/common/types/pagination.type';
 
 export class CommunityFilter extends Pagination {
@@ -11,4 +18,8 @@ export class CommunityFilter extends Pagination {
   @IsInt()
   @Min(1)
   public regionId: number;
+
+  @IsOptional()
+  @IsBoolean()
+  public isFrontier: boolean;
 }

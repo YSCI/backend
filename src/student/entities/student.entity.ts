@@ -13,15 +13,8 @@ import { Nationality } from 'src/nationality/entities/nationality.entity';
 import { Rating } from 'src/rating/entities/rating.entity';
 import { Region } from 'src/region/entities/region.entity';
 import { Status } from 'src/status/entities/status.entity';
-import { Subprivilege } from 'src/subprivilege/entities/subprivilege.entity';
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { StudentsSubprivileges } from './students-subprivileges.entity';
 
 @Entity()
 export class Student extends BaseEntity {
@@ -127,9 +120,8 @@ export class Student extends BaseEntity {
   @ManyToOne(() => Commissariat, (commissariat) => commissariat.students)
   public commissariat: Commissariat;
 
-  @ManyToMany(() => Subprivilege)
-  @JoinTable({ name: 'students_subprivileges' })
-  public subprivileges: Array<Subprivilege>;
+  @OneToMany(() => StudentsSubprivileges, (x) => x.student)
+  public subprivileges: Array<StudentsSubprivileges>;
 
   @Column('timestamp with time zone', { default: () => 'CURRENT_TIMESTAMP' })
   public dateOfAcceptance: Date;
