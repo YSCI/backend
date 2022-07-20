@@ -21,6 +21,7 @@ import { PathParams } from 'src/common/types/path-params.type';
 import { UpdateStudentDto } from 'src/student/dto/update-student.dto';
 import { StudentService } from 'src/student/student.service';
 import { CommandService } from './command.service';
+import { AcceptCommandDto } from './dto/accept-command.dto';
 import { CreateCommandDto } from './dto/create-command.dto';
 import { UpdateCommandDto } from './dto/update-command.dto';
 import { CommandFilter } from './types/command-filter.type';
@@ -119,5 +120,21 @@ export class CommandController {
     await this.commandHistoryService.create(studentsCommands);
 
     return studentsCommands;
+  }
+
+  @Post('accept')
+  async accept(
+    @Body() { studentCommandId, accept }: AcceptCommandDto,
+  ): Promise<IOk> {
+    const result = await this.commandHistoryService.setAccepted(
+      studentCommandId,
+      accept,
+    );
+
+    if (!result) {
+      throw new NotFoundException('Command not found');
+    }
+
+    return { ok: true };
   }
 }

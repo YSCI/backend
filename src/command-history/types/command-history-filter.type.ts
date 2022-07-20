@@ -1,4 +1,4 @@
-import { IsInt, IsOptional, Min } from 'class-validator';
+import { IsBoolean, IsInt, IsOptional, Min } from 'class-validator';
 import { Pagination } from 'src/common/types/pagination.type';
 
 export class CommandHistoryFilter extends Pagination {
@@ -16,4 +16,8 @@ export class CommandHistoryFilter extends Pagination {
   @IsInt()
   @Min(1)
   public userId: number;
+
+  @IsOptional()
+  @IsBoolean()
+  public isAccepted: boolean;
 }
