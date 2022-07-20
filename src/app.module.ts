@@ -25,7 +25,6 @@ import { RotationModule } from './rotation/rotation.module';
 import { StatusModule } from './status/status.module';
 import { StudentModule } from './student/student.module';
 import { SubjectModule } from './subject/subject.module';
-import { SubprivilegeModule } from './subprivilege/subprivilege.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -55,7 +54,6 @@ import { UserModule } from './user/user.module';
     StatusModule,
     NationalityModule,
     PrivilegeModule,
-    SubprivilegeModule,
     CommisariatModule,
     CommandModule,
     CommandHistoryModule,

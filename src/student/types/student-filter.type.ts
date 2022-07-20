@@ -1,6 +1,5 @@
 import {
   ArrayNotEmpty,
-  IsArray,
   IsBoolean,
   IsDate,
   IsEnum,
@@ -190,9 +189,12 @@ export class StudentFilter extends Pagination {
   public semester: number;
 
   @IsOptional()
-  @IsArray()
   @ArrayNotEmpty()
   @IsInt({ each: true })
   @Min(1, { each: true })
-  public subprivileges: Array<number>;
+  public privileges: Array<number>;
+
+  @IsOptional()
+  @IsDate()
+  public privilegeExpirationDate: Date;
 }

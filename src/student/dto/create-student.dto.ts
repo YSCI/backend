@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import {
   ArrayNotEmpty,
   IsArray,
@@ -10,13 +11,11 @@ import {
   MaxLength,
   Min,
   ValidateIf,
-  ValidateNested,
 } from 'class-validator';
 import { EducationBasis } from 'src/common/enums/education-basis.enum';
 import { EducationStatus } from 'src/common/enums/education-status.enum';
 import { Gender } from 'src/common/enums/gender.enum';
 import { PassportType } from 'src/common/enums/passport-type.enum';
-import { AddSubprivilegeDto } from './add-subprivilege.dto';
 
 export class CreateStudentDto {
   @IsString()
@@ -132,9 +131,16 @@ export class CreateStudentDto {
   @Min(1)
   public groupId: number;
 
-  @ArrayNotEmpty()
-  @ValidateNested({ each: true })
-  public subprivileges: Array<AddSubprivilegeDto>;
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  public privilegeId: number;
+
+  @IsOptional()
+  @IsDate()
+  @ValidateIf((obj) => !!obj.privilegeId)
+  @Transform((params) => (!!params.obj.privilegeId ? params.value : undefined))
+  public privilegeExpirationDate: Date;
 
   @IsOptional()
   @IsInt()

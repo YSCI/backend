@@ -89,10 +89,9 @@ export class StudentService {
       );
     if (filters.contactNumber)
       where.contactNumbers = ArrayContains([filters.contactNumber]);
-    if (filters.subprivileges)
-      where.subprivileges = {
-        id: In(filters.subprivileges),
-      };
+    if (filters.privileges) where.privilegeId = In(filters.privileges);
+    if (filters.privilegeExpirationDate)
+      where.privilegeExpirationDate = filters.privilegeExpirationDate;
     if (filters.commandId)
       where.attachedCommands = {
         commandId: filters.commandId,
@@ -119,9 +118,7 @@ export class StudentService {
       group: {
         profession: true,
       },
-      subprivileges: {
-        privilege: true,
-      },
+      privilege: true,
     };
 
     const [data, total] = await this.studentRepository.findAndCount(findOpts);
@@ -187,9 +184,7 @@ export class StudentService {
         status: true,
         commissariat: true,
         group: true,
-        subprivileges: {
-          privilege: true,
-        },
+        privilege: true,
       },
     });
 
