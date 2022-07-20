@@ -23,6 +23,7 @@ export class CommandHistoryService {
     if (filters.commandId) where.commandId = filters.commandId;
     if (filters.studentId) where.studentId = filters.studentId;
     if (filters.userId) where.userId = filters.userId;
+    if (filters.isAccepted) where.isAccepted = filters.isAccepted;
 
     const findOpts = attachPagination<CommandHistory>(filters);
     findOpts.where = where;
@@ -46,5 +47,13 @@ export class CommandHistoryService {
         user: true,
       },
     });
+  }
+
+  async setAccepted(id: number, value: boolean) {
+    const result = await this.commandHistoryRepository.update(id, {
+      isAccepted: value,
+    });
+
+    return !!result.affected;
   }
 }

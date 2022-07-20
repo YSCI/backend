@@ -27,6 +27,9 @@ export class CommandHistory extends BaseEntity {
   @Column()
   public commandNumber: string;
 
+  @Column({ default: false })
+  public isAccepted: boolean;
+
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   public affectDate: Date;
 
