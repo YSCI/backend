@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsString, Min } from 'class-validator';
+import { IsBoolean, IsInt, IsNotEmpty, IsString, Min } from 'class-validator';
 
 export class CreateCommunityDto {
   @IsString()
@@ -8,4 +8,7 @@ export class CreateCommunityDto {
   @IsInt()
   @Min(1)
   public regionId: number;
+
+  @IsBoolean()
+  public isFrontier: boolean;
 }

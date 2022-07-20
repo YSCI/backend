@@ -22,6 +22,7 @@ export class CommunityService {
 
     if (filters.name) where.name = ILike(filters.name + '%');
     if (filters.regionId) where.regionId = filters.regionId;
+    if (filters.isFrontier) where.isFrontier = filters.isFrontier;
 
     const findOpts = attachPagination<Community>(filters);
     findOpts.where = where;

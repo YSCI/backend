@@ -19,4 +19,7 @@ export class Community extends BaseEntity {
 
   @OneToMany(() => Student, (student) => student.residentRegion)
   public residentStudents: Array<Student>;
+
+  @Column({ default: false })
+  public isFrontier: boolean;
 }

@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import {
   ArrayNotEmpty,
   IsArray,
@@ -129,6 +130,17 @@ export class CreateStudentDto {
   @IsInt()
   @Min(1)
   public groupId: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  public privilegeId: number;
+
+  @IsOptional()
+  @IsDate()
+  @ValidateIf((obj) => !!obj.privilegeId)
+  @Transform((params) => (!!params.obj.privilegeId ? params.value : undefined))
+  public privilegeExpirationDate: Date;
 
   @IsOptional()
   @IsInt()

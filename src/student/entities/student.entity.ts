@@ -10,18 +10,11 @@ import { Community } from 'src/community/entities/community.entity';
 import { Group } from 'src/group/entities/group.entity';
 import { HealthStatus } from 'src/health-status/entities/health-status.entity';
 import { Nationality } from 'src/nationality/entities/nationality.entity';
+import { Privilege } from 'src/privilege/entities/privilege.entity';
 import { Rating } from 'src/rating/entities/rating.entity';
 import { Region } from 'src/region/entities/region.entity';
 import { Status } from 'src/status/entities/status.entity';
-import { Subprivilege } from 'src/subprivilege/entities/subprivilege.entity';
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity()
 export class Student extends BaseEntity {
@@ -127,9 +120,14 @@ export class Student extends BaseEntity {
   @ManyToOne(() => Commissariat, (commissariat) => commissariat.students)
   public commissariat: Commissariat;
 
-  @ManyToMany(() => Subprivilege)
-  @JoinTable({ name: 'students_subprivileges' })
-  public subprivileges: Array<Subprivilege>;
+  @Column({ nullable: true })
+  public privilegeId: number;
+
+  @ManyToOne(() => Privilege)
+  public privilege: Privilege;
+
+  @Column({ nullable: true })
+  public privilegeExpirationDate: Date;
 
   @Column('timestamp with time zone', { default: () => 'CURRENT_TIMESTAMP' })
   public dateOfAcceptance: Date;
