@@ -183,7 +183,9 @@ export class StudentService {
         healthStatus: true,
         status: true,
         commissariat: true,
-        group: true,
+        group: {
+          profession: true,
+        },
         privilege: true,
       },
     });
