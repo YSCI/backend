@@ -40,13 +40,15 @@ export class CommandHistoryService {
   }
 
   async findOne(id: number) {
-    return await this.commandHistoryRepository.find({
+    const [result] = await this.commandHistoryRepository.find({
       where: { id },
       relations: {
         command: true,
         user: true,
       },
     });
+
+    return result;
   }
 
   async setAccepted(id: number, value: boolean) {
