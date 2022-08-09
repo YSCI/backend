@@ -1,5 +1,6 @@
 import { Command } from 'src/command/entities/command.entity';
 import { BaseEntity } from 'src/common/entities/base.entity';
+import { UpdateStudentDto } from 'src/student/dto/update-student.dto';
 import { Student } from 'src/student/entities/student.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
@@ -35,4 +36,7 @@ export class CommandHistory extends BaseEntity {
 
   @Column({ nullable: true })
   public description: string;
+
+  @Column('jsonb', { nullable: true })
+  public changeableColumns: UpdateStudentDto;
 }

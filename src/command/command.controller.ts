@@ -89,9 +89,8 @@ export class CommandController {
       throw new NotFoundException('Command not found');
     }
 
+    const changeableColumns: UpdateStudentDto = {};
     if (command.changeableColumns) {
-      const changeableColumns: UpdateStudentDto = {};
-
       for (const key in command.changeableColumns) {
         changeableColumns[key] =
           attachDto.changeableColumns?.[key] ?? command.changeableColumns[key];
@@ -102,8 +101,6 @@ export class CommandController {
           );
         }
       }
-
-      await this.studentService.update(attachDto.studentIds, changeableColumns);
     }
 
     const studentsCommands = attachDto.studentIds.map<Partial<CommandHistory>>(
@@ -114,6 +111,7 @@ export class CommandController {
         userId: req.user.id,
         description: attachDto.description,
         affectDate: attachDto.affectDate,
+        changeableColumns,
       }),
     );
 
@@ -126,14 +124,20 @@ export class CommandController {
   async accept(
     @Body() { studentCommandId, accept }: AcceptCommandDto,
   ): Promise<IOk> {
-    const result = await this.commandHistoryService.setAccepted(
-      studentCommandId,
-      accept,
-    );
+    const command = await this.commandHistoryService.findOne(studentCommandId);
 
-    if (!result) {
+    if (!command) {
       throw new NotFoundException('Command not found');
     }
+
+    if (accept && command.changeableColumns) {
+      await this.studentService.update(
+        command.studentId,
+        command.changeableColumns,
+      );
+    }
+
+    await this.commandHistoryService.setAccepted(studentCommandId, accept);
 
     return { ok: true };
   }
