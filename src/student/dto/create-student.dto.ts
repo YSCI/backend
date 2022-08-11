@@ -69,12 +69,12 @@ export class CreateStudentDto {
   @IsNotEmpty()
   public passportSeries: string;
 
-  // @IsDate()
+  @IsDate()
   public passportDateOfIssue: Date;
 
-  // @IsString()
-  // @IsNotEmpty()
-  // @MaxLength(3)
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(3)
   public passportIssuedBy: string;
 
   @IsInt()
