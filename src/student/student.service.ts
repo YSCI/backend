@@ -1,13 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { OrderDirection } from 'src/common/enums/order-direction.enum';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
 import { IFindResult } from 'src/common/types/find-result.type';
+import { RotationFilter } from 'src/common/types/rotation-filter.type';
+import { UpdateDto } from 'src/common/types/update-dto.type';
 import {
   ArrayContains,
   Between,
   FindOptionsWhere,
   ILike,
   In,
+  Not,
   Repository,
 } from 'typeorm';
 import { CreateStudentDto } from './dto/create-student.dto';
@@ -24,7 +28,9 @@ export class StudentService {
     return await this.studentRepository.save(createStudentDto);
   }
 
-  async findAll(filters: StudentFilter): Promise<IFindResult<Student>> {
+  async findAll(
+    filters: Partial<StudentFilter>,
+  ): Promise<IFindResult<Student>> {
     const where: FindOptionsWhere<Student> = {};
 
     if (filters.firstname) where.firstname = ILike(filters.firstname + '%');
@@ -48,11 +54,21 @@ export class StudentService {
       where.residentAddress = ILike('%' + filters.residentAddress + '%');
     if (filters.passportSeries)
       where.passportSeries = ILike(filters.passportSeries + '%');
+    if (filters.passportType) {
+      where.passportType = filters.passportType;
+    }
+    if (filters.passportIssuedBy) {
+      where.passportIssuedBy = filters.passportIssuedBy;
+    }
     if (filters.socialCardNumber)
       where.socialCardNumber = filters.socialCardNumber;
+    if (filters.educationBasis) {
+      where.educationBasis = filters.educationBasis;
+    }
     if (filters.citizenshipId) where.citizenshipId = filters.citizenshipId;
     if (filters.nationalityId) where.nationalityId = filters.nationalityId;
-    if (filters.professionId) where.professionId = filters.professionId;
+    if (filters.professionId)
+      where.group = { professionId: filters.professionId };
     if (filters.healthStatusId) where.healthStatusId = filters.healthStatusId;
     if (filters.statusId) where.statusId = filters.statusId;
     if (filters.educationStatus) where.educationStatus = filters.statusId;
@@ -60,25 +76,37 @@ export class StudentService {
     if (filters.acceptanceCommandNumber)
       where.acceptanceCommandNumber = filters.acceptanceCommandNumber;
     if (filters.groupId) where.groupId = filters.groupId;
-    if (filters.semester) where.group = { currentSemester: filters.semester };
+    if (filters.semester) where.currentSemester = filters.semester;
     if (filters.dateOfBirthStart && filters.dateOfBirthEnd)
       where.dateOfBirth = Between(
-        new Date(filters.dateOfBirthStart),
-        new Date(filters.dateOfBirthEnd),
+        filters.dateOfBirthStart,
+        filters.dateOfBirthEnd,
       );
     if (filters.dateOfAcceptanceStart && filters.dateOfAcceptanceEnd)
       where.dateOfAcceptance = Between(
-        new Date(filters.dateOfAcceptanceStart),
-        new Date(filters.dateOfAcceptanceEnd),
+        filters.dateOfAcceptanceStart,
+        filters.dateOfAcceptanceEnd,
       );
     if (filters.contactNumber)
       where.contactNumbers = ArrayContains([filters.contactNumber]);
-    if (filters.subprivileges)
-      where.subprivileges = {
-        id: In(filters.subprivileges),
-      };
+    if (filters.privileges) where.privilegeId = In(filters.privileges);
+    if (filters.privilegeExpirationDate)
+      where.privilegeExpirationDate = filters.privilegeExpirationDate;
     if (filters.commandId)
-      where.attachedCommands = { commandId: filters.commandId };
+      where.attachedCommands = {
+        commandId: filters.commandId,
+        affectDate: Between(filters.commandStartDate, filters.commandEndDate),
+      };
+    if (filters.passportValidUntilStart && filters.passportValidUntilEnd) {
+      where.passportValidUntil = Between(
+        filters.passportValidUntilStart,
+        filters.passportDateOfIssueEnd,
+      );
+    }
+    where.passportDateOfIssue = Between(
+      filters.passportDateOfIssueStart,
+      filters.passportDateOfIssueEnd,
+    );
 
     const findOpts = attachPagination<Student>(filters);
 
@@ -90,18 +118,61 @@ export class StudentService {
       residentCommunity: true,
       residentRegion: true,
       nationality: true,
-      profession: true,
       healthStatus: true,
       status: true,
       commissariat: true,
-      group: true,
-      subprivileges: {
-        privilege: true,
+      group: {
+        profession: true,
       },
+      privilege: true,
     };
 
     const [data, total] = await this.studentRepository.findAndCount(findOpts);
 
+    return { data, total };
+  }
+
+  async getRotatableStudentsWithRatingsAndTotalCount(
+    filters: RotationFilter,
+    withSubjects = false,
+  ): Promise<IFindResult<Partial<Student>>> {
+    const opts = attachPagination<Student>(filters);
+
+    opts.select = {
+      id: true,
+      firstname: true,
+      lastname: true,
+      fathername: true,
+      groupId: true,
+      educationStatus: true,
+      rates: {
+        id: true,
+        rate: true,
+        semester: true,
+        subject: {
+          id: true,
+          name: true,
+        },
+      },
+    };
+    opts.where = {
+      currentSemester: Not(-1),
+      isFreezed: false,
+      rates: {
+        semester: In(filters.semestersForCalculation),
+      },
+      group: {
+        profession: {
+          id: filters.professionId,
+        },
+      },
+    };
+    opts.order.educationStatus = OrderDirection.DESC;
+    opts.relations = {
+      rates: withSubjects ? { subject: true } : true,
+    };
+
+    const [data, total] = await this.studentRepository.findAndCount(opts);
     return { data, total };
   }
 
@@ -115,30 +186,58 @@ export class StudentService {
         residentCommunity: true,
         residentRegion: true,
         nationality: true,
-        profession: true,
         healthStatus: true,
         status: true,
         commissariat: true,
-        group: true,
-        subprivileges: {
-          privilege: true,
+        group: {
+          profession: true,
         },
+        privilege: true,
       },
     });
 
     return student;
   }
 
-  update(id: number, updateStudentDto: UpdateStudentDto): Promise<boolean>;
-  update(ids: number[], updateStudentDto: UpdateStudentDto): Promise<boolean>;
-
-  async update(idOrIds: number | number[], updateStudentDto: UpdateStudentDto) {
+  async update(
+    criteria: number | number[] | FindOptionsWhere<Student>,
+    updateStudentDto: UpdateDto<
+      UpdateStudentDto | { isFreezed?: boolean; hasPension?: boolean }
+    >,
+  ) {
     const result = await this.studentRepository.update(
-      idOrIds,
+      criteria,
       updateStudentDto,
     );
 
     return !!result.affected;
+  }
+
+  async switchSemesterByGroupIds(groupIds: number[], isPositive = true) {
+    return await this.update(
+      {
+        groupId: In(groupIds),
+        currentSemester: Not(-1),
+        isFreezed: false,
+      },
+      {
+        currentSemester: () => `"currentSemester" ${isPositive ? '+' : '-'} 1`,
+      },
+    );
+  }
+
+  async graduateByGroupIds(groupIds: number[]) {
+    return await this.update(
+      {
+        groupId: In(groupIds),
+        currentSemester: Not(-1),
+        isFreezed: false,
+      },
+      {
+        currentSemester: -1,
+        isFreezed: true,
+      },
+    );
   }
 
   async remove(ids: number[]) {

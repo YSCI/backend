@@ -1,17 +1,22 @@
+import { Transform } from 'class-transformer';
 import {
   ArrayNotEmpty,
   IsArray,
-  IsBoolean,
-  IsDateString,
+  IsDate,
   IsEnum,
   IsInt,
   IsNotEmpty,
   IsOptional,
   IsPositive,
   IsString,
+  MaxLength,
   Min,
+  ValidateIf,
 } from 'class-validator';
+import { EducationBasis } from 'src/common/enums/education-basis.enum';
+import { EducationStatus } from 'src/common/enums/education-status.enum';
 import { Gender } from 'src/common/enums/gender.enum';
+import { PassportType } from 'src/common/enums/passport-type.enum';
 
 export class CreateStudentDto {
   @IsString()
@@ -30,11 +35,8 @@ export class CreateStudentDto {
   @IsEnum(Gender)
   public gender: Gender;
 
-  @IsBoolean()
-  public hasPension: boolean;
-
-  @IsDateString()
-  public dateOfBirth: string;
+  @IsDate()
+  public dateOfBirth: Date;
 
   @IsOptional()
   @IsInt()
@@ -68,6 +70,25 @@ export class CreateStudentDto {
   @IsNotEmpty()
   public passportSeries: string;
 
+  @IsDate()
+  @IsOptional()
+  public passportDateOfIssue: Date;
+
+  @IsDate()
+  @IsOptional()
+  public passportValidUntil: Date;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(3)
+  @IsOptional()
+  public passportIssuedBy: string;
+
+  @IsInt()
+  @IsEnum(PassportType)
+  @IsOptional()
+  public passportType: PassportType;
+
   @IsInt()
   @Min(1)
   @IsNotEmpty()
@@ -79,16 +100,16 @@ export class CreateStudentDto {
   public contactNumbers: Array<string>;
 
   @IsInt()
+  @IsEnum(EducationBasis)
+  public educationBasis: EducationBasis;
+
+  @IsInt()
   @Min(1)
   public citizenshipId: number;
 
   @IsInt()
   @Min(1)
   public nationalityId: number;
-
-  @IsInt()
-  @Min(1)
-  public professionId: number;
 
   @IsInt()
   @Min(1)
@@ -99,15 +120,16 @@ export class CreateStudentDto {
   public statusId: number;
 
   @IsInt()
-  @IsPositive()
-  public educationStatus: number;
+  @IsEnum(EducationStatus)
+  public educationStatus: EducationStatus;
 
+  @ValidateIf((object) => object.gender === Gender.Male)
   @IsInt()
   @Min(1)
   public commissariatId: number;
 
-  @IsDateString()
-  public dateOfAcceptance: string;
+  @IsDate()
+  public dateOfAcceptance: Date;
 
   @IsString()
   @IsNotEmpty()
@@ -116,4 +138,20 @@ export class CreateStudentDto {
   @IsInt()
   @Min(1)
   public groupId: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  public privilegeId: number;
+
+  @IsOptional()
+  @IsDate()
+  @ValidateIf((obj) => !!obj.privilegeId)
+  @Transform((params) => (!!params.obj.privilegeId ? params.value : undefined))
+  public privilegeExpirationDate: Date;
+
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  public currentSemester: number;
 }

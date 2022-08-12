@@ -1,14 +1,15 @@
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { Profession } from 'src/profession/entities/profession.entity';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, Unique } from 'typeorm';
 import { Curriculum } from '../../curriculum/entities/curriculum.entity';
 
 @Entity()
+@Unique(['number', 'openedAt'])
 export class Group extends BaseEntity {
-  @Column({ unique: true })
+  @Column()
   public number: string;
 
-  @Column()
+  @Column({ default: 1 })
   public currentSemester: number;
 
   @Column({ nullable: true })
@@ -25,4 +26,10 @@ export class Group extends BaseEntity {
 
   @Column()
   public openedAt: number;
+
+  @Column({ default: 0 })
+  public freePlacesCount: number;
+
+  @Column('decimal', { default: 0 })
+  public fee: string;
 }

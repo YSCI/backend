@@ -1,17 +1,20 @@
 import {
   ArrayNotEmpty,
-  IsArray,
   IsBoolean,
+  IsDate,
   IsEnum,
   IsInt,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsPositive,
   IsString,
+  MaxLength,
   Min,
 } from 'class-validator';
+import { EducationBasis } from 'src/common/enums/education-basis.enum';
+import { EducationStatus } from 'src/common/enums/education-status.enum';
 import { Gender } from 'src/common/enums/gender.enum';
+import { PassportType } from 'src/common/enums/passport-type.enum';
 import { Pagination } from 'src/common/types/pagination.type';
 
 export class StudentFilter extends Pagination {
@@ -40,14 +43,12 @@ export class StudentFilter extends Pagination {
   public hasPension: boolean;
 
   @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  public dateOfBirthStart: string;
+  @IsDate()
+  public dateOfBirthStart: Date;
 
   @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  public dateOfBirthEnd: string;
+  @IsDate()
+  public dateOfBirthEnd: Date;
 
   @IsOptional()
   @IsInt()
@@ -85,6 +86,33 @@ export class StudentFilter extends Pagination {
   public passportSeries: string;
 
   @IsOptional()
+  @IsDate()
+  public passportDateOfIssueStart: Date = new Date('1990');
+
+  @IsOptional()
+  @IsDate()
+  public passportDateOfIssueEnd: Date = new Date();
+
+  @IsOptional()
+  @IsDate()
+  public passportValidUntilStart: Date;
+
+  @IsOptional()
+  @IsDate()
+  public passportValidUntilEnd: Date;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(3)
+  public passportIssuedBy: string;
+
+  @IsOptional()
+  @IsInt()
+  @IsEnum(PassportType)
+  public passportType: PassportType;
+
+  @IsOptional()
   @IsInt()
   @Min(1)
   @IsNotEmpty()
@@ -94,6 +122,10 @@ export class StudentFilter extends Pagination {
   @IsString()
   @IsNotEmpty()
   public contactNumber: string;
+
+  @IsOptional()
+  @IsEnum(EducationBasis)
+  public educationBasis: EducationBasis;
 
   @IsOptional()
   @IsInt()
@@ -122,8 +154,8 @@ export class StudentFilter extends Pagination {
 
   @IsOptional()
   @IsInt()
-  @IsPositive()
-  public educationStatus: number;
+  @Min(0)
+  public educationStatus: EducationStatus;
 
   @IsOptional()
   @IsInt()
@@ -131,12 +163,20 @@ export class StudentFilter extends Pagination {
   public commissariatId: number;
 
   @IsOptional()
-  @IsNumber()
-  public dateOfAcceptanceStart: number;
+  @IsDate()
+  public dateOfAcceptanceStart: Date;
 
   @IsOptional()
-  @IsNumber()
-  public dateOfAcceptanceEnd: number;
+  @IsDate()
+  public dateOfAcceptanceEnd: Date;
+
+  @IsOptional()
+  @IsDate()
+  public commandStartDate: Date = new Date('1955');
+
+  @IsOptional()
+  @IsDate()
+  public commandEndDate: Date = new Date();
 
   @IsOptional()
   @IsString()
@@ -158,9 +198,12 @@ export class StudentFilter extends Pagination {
   public semester: number;
 
   @IsOptional()
-  @IsArray()
   @ArrayNotEmpty()
   @IsInt({ each: true })
   @Min(1, { each: true })
-  public subprivileges: Array<number>;
+  public privileges: Array<number>;
+
+  @IsOptional()
+  @IsDate()
+  public privilegeExpirationDate: Date;
 }

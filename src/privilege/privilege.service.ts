@@ -30,14 +30,7 @@ export class PrivilegeService {
   }
 
   async findOne(id: number) {
-    const [privilege] = await this.privilegeRepository.find({
-      where: { id },
-      relations: {
-        subprivileges: true,
-      },
-    });
-
-    return privilege;
+    return await this.privilegeRepository.findOneBy({ id });
   }
 
   async update(id: number, updatePrivilegeDto: UpdatePrivilegeDto) {

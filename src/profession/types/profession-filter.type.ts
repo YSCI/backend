@@ -40,6 +40,6 @@ export class ProfessionsFilter extends Pagination {
 
   @IsOptional()
   @IsInt()
-  @IsPositive()
+  @Min(0)
   public freePlacesCount: number;
 }

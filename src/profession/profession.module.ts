@@ -8,5 +8,6 @@ import { ProfessionController } from './profession.controller';
   imports: [TypeOrmModule.forFeature([Profession])],
   controllers: [ProfessionController],
   providers: [ProfessionService],
+  exports: [ProfessionService],
 })
 export class ProfessionModule {}

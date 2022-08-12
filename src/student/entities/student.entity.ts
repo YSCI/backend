@@ -2,23 +2,19 @@ import { Citizenship } from 'src/citizenship/entities/citizenship.entity';
 import { CommandHistory } from 'src/command-history/entities/command-history.entity';
 import { Commissariat } from 'src/commissariat/entities/commissariat.entity';
 import { BaseEntity } from 'src/common/entities/base.entity';
+import { EducationBasis } from 'src/common/enums/education-basis.enum';
+import { EducationStatus } from 'src/common/enums/education-status.enum';
 import { Gender } from 'src/common/enums/gender.enum';
+import { PassportType } from 'src/common/enums/passport-type.enum';
 import { Community } from 'src/community/entities/community.entity';
 import { Group } from 'src/group/entities/group.entity';
 import { HealthStatus } from 'src/health-status/entities/health-status.entity';
 import { Nationality } from 'src/nationality/entities/nationality.entity';
-import { Profession } from 'src/profession/entities/profession.entity';
+import { Privilege } from 'src/privilege/entities/privilege.entity';
+import { Rating } from 'src/rating/entities/rating.entity';
 import { Region } from 'src/region/entities/region.entity';
 import { Status } from 'src/status/entities/status.entity';
-import { Subprivilege } from 'src/subprivilege/entities/subprivilege.entity';
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity()
 export class Student extends BaseEntity {
@@ -34,7 +30,7 @@ export class Student extends BaseEntity {
   @Column('int')
   public gender: Gender;
 
-  @Column()
+  @Column({ default: false })
   public hasPension: boolean;
 
   @Column('timestamp with time zone')
@@ -73,11 +69,26 @@ export class Student extends BaseEntity {
   @Column({ unique: true })
   public passportSeries: string;
 
+  @Column({ nullable: true })
+  public passportDateOfIssue: Date;
+
+  @Column({ nullable: true })
+  public passportValidUntil: Date;
+
+  @Column({ nullable: true })
+  public passportIssuedBy: string;
+
+  @Column({ nullable: true })
+  public passportType: PassportType;
+
   @Column({ unique: true })
   public socialCardNumber: number;
 
   @Column('varchar', { array: true })
   public contactNumbers: Array<string>;
+
+  @Column()
+  public educationBasis: EducationBasis;
 
   @Column()
   public citizenshipId?: number;
@@ -92,12 +103,6 @@ export class Student extends BaseEntity {
   public nationality: Nationality;
 
   @Column()
-  public professionId?: number;
-
-  @ManyToOne(() => Profession, (profession) => profession.students)
-  public profession: Profession;
-
-  @Column()
   public healthStatusId?: number;
 
   @ManyToOne(() => HealthStatus)
@@ -109,18 +114,23 @@ export class Student extends BaseEntity {
   @ManyToOne(() => Status)
   public status: Status;
 
-  @Column()
-  public educationStatus: number;
+  @Column('int')
+  public educationStatus: EducationStatus;
 
-  @Column()
+  @Column({ nullable: true })
   public commissariatId?: number;
 
   @ManyToOne(() => Commissariat, (commissariat) => commissariat.students)
   public commissariat: Commissariat;
 
-  @ManyToMany(() => Subprivilege)
-  @JoinTable({ name: 'students_subprivileges' })
-  public subprivileges: Array<Subprivilege>;
+  @Column({ nullable: true })
+  public privilegeId: number;
+
+  @ManyToOne(() => Privilege)
+  public privilege: Privilege;
+
+  @Column({ nullable: true })
+  public privilegeExpirationDate: Date;
 
   @Column('timestamp with time zone', { default: () => 'CURRENT_TIMESTAMP' })
   public dateOfAcceptance: Date;
@@ -136,4 +146,13 @@ export class Student extends BaseEntity {
 
   @ManyToOne(() => Group)
   public group: Group;
+
+  @Column({ default: 1 })
+  public currentSemester: number;
+
+  @Column({ default: false })
+  public isFreezed: boolean;
+
+  @OneToMany(() => Rating, (rating) => rating.student)
+  public rates: Array<Rating>;
 }

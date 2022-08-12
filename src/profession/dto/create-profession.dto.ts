@@ -33,6 +33,6 @@ export class CreateProfessionDto {
   public fee: string;
 
   @IsInt()
-  @IsPositive()
+  @Min(0)
   public freePlacesCount: number;
 }

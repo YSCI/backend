@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -12,18 +13,35 @@ import {
 import { BatchDelete } from 'src/common/types/batch-delete.type';
 import { IOk } from 'src/common/types/ok.type';
 import { PathParams } from 'src/common/types/path-params.type';
+import { ProfessionService } from 'src/profession/profesion.service';
 import { CreateGroupDto } from './dto/create-group.dto';
+import { GraduationInfoDto } from './dto/graduation-info.dto';
+import { SwitchSemesterDto } from './dto/switch-course.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { GroupService } from './group.service';
 import { GroupFilter } from './types/group-filter.type';
 
 @Controller('group')
 export class GroupController {
-  constructor(private readonly groupService: GroupService) {}
+  constructor(
+    private readonly groupService: GroupService,
+    private readonly professionService: ProfessionService,
+  ) {}
 
   @Post()
   async create(@Body() createGroupDto: CreateGroupDto) {
-    return await this.groupService.create(createGroupDto);
+    const profession = await this.professionService.findOne(
+      createGroupDto.professionId,
+    );
+
+    if (!profession) {
+      throw new NotFoundException('Depended resource does not exists');
+    }
+
+    return await this.groupService.create(createGroupDto, {
+      freePlacesCount: profession.freePlacesCount,
+      fee: profession.fee,
+    });
   }
 
   @Get()
@@ -65,5 +83,35 @@ export class GroupController {
     }
 
     return { ok: true };
+  }
+
+  @Post('switchSemester')
+  async switchSemester(
+    @Body() { groupIds, isPositive }: SwitchSemesterDto,
+  ): Promise<IOk> {
+    const groups = await this.groupService.findByIds(groupIds);
+
+    if (!groups.length) {
+      throw new NotFoundException('Group(s) not found');
+    } else if (
+      !groups.every(
+        (group) => group.currentSemester < group.profession.yearsCount * 2,
+      )
+    ) {
+      throw new BadRequestException(
+        'One of these groups has already graduated',
+      );
+    }
+
+    await this.groupService.switchSemester(groupIds, isPositive);
+
+    return { ok: true };
+  }
+
+  @Post('graduate')
+  async graduate(@Body() { groupIds }: GraduationInfoDto) {
+    const result = await this.groupService.graduate(groupIds);
+
+    return { ok: result };
   }
 }

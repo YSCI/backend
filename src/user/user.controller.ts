@@ -30,7 +30,7 @@ export class UserController {
   }
 
   @Get()
-  async indAll(@Query() filters: UsersFilter) {
+  async findAll(@Query() filters: UsersFilter) {
     return await this.userService.findAll(filters);
   }
 
