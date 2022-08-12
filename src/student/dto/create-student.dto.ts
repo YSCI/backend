@@ -70,15 +70,22 @@ export class CreateStudentDto {
   public passportSeries: string;
 
   @IsDate()
+  @IsOptional()
   public passportDateOfIssue: Date;
+
+  @IsDate()
+  @IsOptional()
+  public passportValidUntil: Date;
 
   @IsString()
   @IsNotEmpty()
   @MaxLength(3)
+  @IsOptional()
   public passportIssuedBy: string;
 
   @IsInt()
   @IsEnum(PassportType)
+  @IsOptional()
   public passportType: PassportType;
 
   @IsInt()

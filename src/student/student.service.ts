@@ -97,6 +97,12 @@ export class StudentService {
         commandId: filters.commandId,
         affectDate: Between(filters.commandStartDate, filters.commandEndDate),
       };
+    if (filters.passportValidUntilStart && filters.passportValidUntilEnd) {
+      where.passportValidUntil = Between(
+        filters.passportValidUntilStart,
+        filters.passportDateOfIssueEnd,
+      );
+    }
     where.passportDateOfIssue = Between(
       filters.passportDateOfIssueStart,
       filters.passportDateOfIssueEnd,

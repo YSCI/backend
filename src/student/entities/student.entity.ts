@@ -69,13 +69,16 @@ export class Student extends BaseEntity {
   @Column({ unique: true })
   public passportSeries: string;
 
-  @Column()
+  @Column({ nullable: true })
   public passportDateOfIssue: Date;
 
-  @Column()
+  @Column({ nullable: true })
+  public passportValidUntil: Date;
+
+  @Column({ nullable: true })
   public passportIssuedBy: string;
 
-  @Column()
+  @Column({ nullable: true })
   public passportType: PassportType;
 
   @Column({ unique: true })
