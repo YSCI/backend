@@ -93,6 +93,14 @@ export class StudentFilter extends Pagination {
   public passportDateOfIssueEnd: Date = new Date();
 
   @IsOptional()
+  @IsDate()
+  public passportValidUntilStart: Date;
+
+  @IsOptional()
+  @IsDate()
+  public passportValidUntilEnd: Date;
+
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
   @MaxLength(3)
