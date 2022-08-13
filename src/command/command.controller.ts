@@ -2,88 +2,45 @@ import {
   BadRequestException,
   Body,
   Controller,
-  Delete,
-  Get,
   NotFoundException,
-  Param,
   Post,
-  Put,
-  Query,
   Request,
 } from '@nestjs/common';
 import { CommandHistoryService } from 'src/command-history/command-history.service';
 import { CommandHistory } from 'src/command-history/entities/command-history.entity';
 import { AttachCommandDto } from 'src/command/dto/attach-command.dto';
+import { BaseController } from 'src/common/base/controller.base';
 import { PropertyHelpers } from 'src/common/helpers/property.helper';
-import { BatchDelete } from 'src/common/types/batch-delete.type';
 import { IOk } from 'src/common/types/ok.type';
-import { PathParams } from 'src/common/types/path-params.type';
 import { UpdateStudentDto } from 'src/student/dto/update-student.dto';
 import { StudentService } from 'src/student/student.service';
 import { CommandService } from './command.service';
 import { AcceptCommandDto } from './dto/accept-command.dto';
 import { CreateCommandDto } from './dto/create-command.dto';
 import { UpdateCommandDto } from './dto/update-command.dto';
+import { Command } from './entities/command.entity';
 import { CommandFilter } from './types/command-filter.type';
 
 @Controller('command')
-export class CommandController {
+export class CommandController extends BaseController<
+  Command,
+  CommandFilter,
+  CreateCommandDto,
+  UpdateCommandDto,
+  CommandService
+> {
   constructor(
-    private readonly commandService: CommandService,
+    commandService: CommandService,
     private readonly commandHistoryService: CommandHistoryService,
     private readonly studentService: StudentService,
-  ) {}
-
-  @Post()
-  async create(@Body() createCommandDto: CreateCommandDto) {
-    return await this.commandService.create(createCommandDto);
-  }
-
-  @Get()
-  async findAll(@Query() filters: CommandFilter) {
-    return await this.commandService.findAll(filters);
-  }
-
-  @Get(':id')
-  async findOne(@Param() { id }: PathParams) {
-    const command = await this.commandService.findOne(id);
-
-    if (!command) {
-      throw new NotFoundException('Command not found');
-    }
-
-    return command;
-  }
-
-  @Put(':id')
-  async update(
-    @Param() { id }: PathParams,
-    @Body() updateCommandDto: UpdateCommandDto,
-  ): Promise<IOk> {
-    const result = await this.commandService.update(id, updateCommandDto);
-
-    if (!result) {
-      throw new NotFoundException('Command not found');
-    }
-
-    return { ok: true };
-  }
-
-  @Delete()
-  async remove(@Query() { ids }: BatchDelete): Promise<IOk> {
-    const result = await this.commandService.remove(ids);
-
-    if (!result) {
-      throw new NotFoundException('Command not found');
-    }
-
-    return { ok: true };
+  ) {
+    super(commandService);
   }
 
   @Post('attach')
   async attach(@Request() req, @Body() attachDto: AttachCommandDto) {
     // TODO: select only status id
-    const command = await this.commandService.findOne(attachDto.commandId);
+    const command = await this.service.findOne(attachDto.commandId);
 
     if (!command) {
       throw new NotFoundException('Command not found');
