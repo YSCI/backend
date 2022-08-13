@@ -34,7 +34,7 @@ export class CommandController extends BaseController<
     private readonly commandHistoryService: CommandHistoryService,
     private readonly studentService: StudentService,
   ) {
-    super(commandService);
+    super(commandService, Command.name);
   }
 
   @Post('attach')

@@ -38,10 +38,12 @@ export class GroupController {
       throw new NotFoundException('Depended resource does not exists');
     }
 
-    return await this.groupService.create(createGroupDto, {
-      freePlacesCount: profession.freePlacesCount,
-      fee: profession.fee,
-    });
+    return await this.groupService.create(
+      Object.assign(createGroupDto, {
+        freePlacesCount: profession.freePlacesCount,
+        fee: profession.fee,
+      }),
+    );
   }
 
   @Get()

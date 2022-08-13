@@ -23,7 +23,10 @@ export class BaseController<
   TUpdateDto extends QueryDeepPartialEntity<TEntity>,
   TService extends BaseService<TEntity, TFilter, TCreateDto, TUpdateDto>,
 > {
-  constructor(protected readonly service: TService) {}
+  constructor(
+    protected readonly service: TService,
+    protected readonly resourceName: string = 'Data',
+  ) {}
 
   @Post()
   async create(@Body() dto: TCreateDto) {
@@ -40,7 +43,7 @@ export class BaseController<
     const result = await this.service.findOne(id);
 
     if (!result) {
-      throw new NotFoundException('Data not found');
+      throw new NotFoundException(`${this.resourceName} not found`);
     }
 
     return result;
@@ -54,7 +57,7 @@ export class BaseController<
     const result = await this.service.update(id, dto);
 
     if (!result) {
-      throw new NotFoundException('Data not found');
+      throw new NotFoundException(`${this.resourceName} not found`);
     }
 
     return { ok: true };
@@ -65,7 +68,7 @@ export class BaseController<
     const result = await this.service.remove(ids);
 
     if (!result) {
-      throw new NotFoundException('Data not found');
+      throw new NotFoundException(`${this.resourceName} not found`);
     }
 
     return { ok: true };

@@ -2,6 +2,7 @@ import {
   DeepPartial,
   FindManyOptions,
   FindOptionsRelations,
+  FindOptionsWhere,
   Repository,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
@@ -14,9 +15,7 @@ export abstract class BaseService<
   TCreateDto extends DeepPartial<TEntity>,
   TUpdateDto extends QueryDeepPartialEntity<TEntity>,
 > {
-  constructor(protected readonly repository: Repository<TEntity>) {
-    this.repository = repository;
-  }
+  constructor(protected readonly repository: Repository<TEntity>) {}
 
   public async create(dto: TCreateDto): Promise<TEntity>;
   public async create(dtos: TCreateDto[]): Promise<TEntity>;
@@ -27,12 +26,16 @@ export abstract class BaseService<
 
   public async update(id: number, dto: TUpdateDto): Promise<boolean>;
   public async update(ids: number[], dto: TUpdateDto): Promise<boolean>;
+  public async update(
+    criteria: FindOptionsWhere<TEntity>,
+    dto: TUpdateDto,
+  ): Promise<boolean>;
 
   public async update(
-    idOrIds: number | number[],
+    idOrIdsOrCriteria: number | number[] | FindOptionsWhere<TEntity>,
     dto: TUpdateDto,
   ): Promise<boolean> {
-    const result = await this.repository.update(idOrIds, dto);
+    const result = await this.repository.update(idOrIdsOrCriteria, dto);
 
     return !!result.affected;
   }
