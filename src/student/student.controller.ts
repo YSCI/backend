@@ -15,6 +15,6 @@ export class StudentController extends BaseController<
   StudentService
 >(CreateStudentDto, UpdateStudentDto, StudentFilter) {
   constructor(service: StudentService) {
-    super(service);
+    super(service, Student.name);
   }
 }

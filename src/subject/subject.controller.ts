@@ -15,6 +15,6 @@ export class SubjectController extends BaseController<
   SubjectService
 >(CreateSubjectDto, UpdateSubjectDto, SubjectFilter) {
   constructor(service: SubjectService) {
-    super(service);
+    super(service, Subject.name);
   }
 }

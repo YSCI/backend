@@ -15,6 +15,6 @@ export class NationalityController extends BaseController<
   NationalityService
 >(CreateNationalityDto, UpdateNationalityDto, NationalityFilter) {
   constructor(service: NationalityService) {
-    super(service);
+    super(service, Nationality.name);
   }
 }

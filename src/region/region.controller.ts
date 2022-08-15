@@ -15,6 +15,6 @@ export class RegionController extends BaseController<
   RegionService
 >(CreateRegionDto, UpdateRegionDto, RegionFilter) {
   constructor(service: RegionService) {
-    super(service);
+    super(service, Region.name);
   }
 }
