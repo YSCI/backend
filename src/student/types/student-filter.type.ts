@@ -6,7 +6,6 @@ import {
   IsInt,
   IsNotEmpty,
   IsOptional,
-  IsPositive,
   IsString,
   MaxLength,
   Min,
@@ -87,11 +86,11 @@ export class StudentFilter extends Pagination {
 
   @IsOptional()
   @IsDate()
-  public passportDateOfIssueStart: Date = new Date('1990');
+  public passportDateOfIssueStart: Date;
 
   @IsOptional()
   @IsDate()
-  public passportDateOfIssueEnd: Date = new Date();
+  public passportDateOfIssueEnd: Date;
 
   @IsOptional()
   @IsDate()
