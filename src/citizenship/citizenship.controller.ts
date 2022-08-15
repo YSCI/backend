@@ -13,7 +13,7 @@ export class CitizenshipController extends BaseController<
   CreateCitizenshipDto,
   UpdateCitizenshipDto,
   CitizenshipService
-> {
+>(CreateCitizenshipDto, UpdateCitizenshipDto, CitizenshipFilter) {
   constructor(service: CitizenshipService) {
     super(service, Citizenship.name);
   }

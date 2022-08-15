@@ -34,7 +34,10 @@ export class CommunityService extends BaseService<
     if (filters.regionId) where.regionId = filters.regionId;
     if (filters.isFrontier) where.isFrontier = filters.isFrontier;
 
-    return attachPagination<Community>(filters);
+    const findOpts = attachPagination<Community>(filters);
+    findOpts.where = where;
+
+    return findOpts;
   }
   protected getRelationsConfiguration(): FindOptionsRelations<Community> {
     return {

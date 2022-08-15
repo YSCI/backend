@@ -13,7 +13,7 @@ export class CommissariatController extends BaseController<
   CreateCommissariatDto,
   UpdateCommissariatDto,
   CommissariatService
-> {
+>(CreateCommissariatDto, UpdateCommissariatDto, CommissariatFilter) {
   constructor(service: CommissariatService) {
     super(service, Commissariat.name);
   }

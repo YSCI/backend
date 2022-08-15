@@ -4,19 +4,14 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { IFindResult } from 'src/common/types/find-result.type';
-import { GroupService } from 'src/group/group.service';
 import { Student } from 'src/student/entities/student.entity';
 import { StudentService } from 'src/student/student.service';
 import { In, Not } from 'typeorm';
-// import { StudentPensionDto } from './dto/student-pension-info.dto';
 import { RotationFilter } from '../common/types/rotation-filter.type';
 
 @Injectable()
 export class PensionService {
-  constructor(
-    private readonly studentService: StudentService,
-    private readonly groupService: GroupService,
-  ) {}
+  constructor(private readonly studentService: StudentService) {}
 
   async findAll(
     filters: RotationFilter,

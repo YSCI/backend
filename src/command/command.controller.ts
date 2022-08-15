@@ -28,7 +28,7 @@ export class CommandController extends BaseController<
   CreateCommandDto,
   UpdateCommandDto,
   CommandService
-> {
+>(CreateCommandDto, UpdateCommandDto, CommandFilter) {
   constructor(
     commandService: CommandService,
     private readonly commandHistoryService: CommandHistoryService,

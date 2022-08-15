@@ -23,18 +23,15 @@ export class GroupService extends BaseService<
   CreateGroupDto,
   UpdateGroupDto
 > {
-  @InjectRepository(Group)
-  private readonly groupRepository: Repository<Group>;
-
   constructor(
-    repository: Repository<Group>,
+    @InjectRepository(Group) repository: Repository<Group>,
     private readonly studentService: StudentService,
   ) {
     super(repository);
   }
 
   async findByIds(ids: Array<number>, curriculum = false) {
-    return await this.groupRepository.find({
+    return await this.repository.find({
       where: {
         id: In(ids),
       },
@@ -96,7 +93,10 @@ export class GroupService extends BaseService<
       where.freePlacesCount = filters.freePlacesCount;
     if (filters.fee) where.fee = filters.fee;
 
-    return attachPagination<Group>(filters);
+    const findOpts = attachPagination<Group>(filters);
+    findOpts.where = where;
+
+    return findOpts;
   }
   protected getRelationsConfiguration(): FindOptionsRelations<Group> {
     return {

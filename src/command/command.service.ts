@@ -23,7 +23,10 @@ export class CommandService extends BaseService<
     const where: FindOptionsWhere<Command> = {};
     if (filters.name) where.name = ILike(filters.name + '%');
 
-    return attachPagination<Command>(filters);
+    const findOpts = attachPagination<Command>(filters);
+    findOpts.where = where;
+
+    return findOpts;
   }
 
   protected getRelationsConfiguration() {

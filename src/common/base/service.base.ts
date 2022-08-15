@@ -25,15 +25,27 @@ export abstract class BaseService<
   }
 
   public async update(id: number, dto: TUpdateDto): Promise<boolean>;
+  public async update(
+    id: number,
+    queryDto: QueryDeepPartialEntity<TEntity>,
+  ): Promise<boolean>;
   public async update(ids: number[], dto: TUpdateDto): Promise<boolean>;
+  public async update(
+    ids: number[],
+    queryDto: QueryDeepPartialEntity<TEntity>,
+  ): Promise<boolean>;
   public async update(
     criteria: FindOptionsWhere<TEntity>,
     dto: TUpdateDto,
   ): Promise<boolean>;
+  public async update(
+    criteria: FindOptionsWhere<TEntity>,
+    queryDto: QueryDeepPartialEntity<TEntity>,
+  ): Promise<boolean>;
 
   public async update(
     idOrIdsOrCriteria: number | number[] | FindOptionsWhere<TEntity>,
-    dto: TUpdateDto,
+    dto: TUpdateDto | QueryDeepPartialEntity<TEntity>,
   ): Promise<boolean> {
     const result = await this.repository.update(idOrIdsOrCriteria, dto);
 

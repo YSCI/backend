@@ -33,7 +33,10 @@ export class CitizenshipService extends BaseService<
     const where: FindOptionsWhere<Citizenship> = {};
     if (filters.country) where.country = ILike(filters.country + '%');
 
-    return attachPagination<Citizenship>(filters);
+    const findOpts = attachPagination<Citizenship>(filters);
+    findOpts.where = where;
+
+    return findOpts;
   }
   protected getRelationsConfiguration(): FindOptionsRelations<Citizenship> {
     return {};

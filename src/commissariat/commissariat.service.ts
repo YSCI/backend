@@ -37,7 +37,10 @@ export class CommissariatService extends BaseService<
     if (filters.description)
       where.description = ILike('%' + filters.description + '%');
 
-    return attachPagination<Commissariat>(filters);
+    const findOpts = attachPagination<Commissariat>(filters);
+    findOpts.where = where;
+
+    return findOpts;
   }
   protected getRelationsConfiguration(): FindOptionsRelations<Commissariat> {
     return {};
