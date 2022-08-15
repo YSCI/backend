@@ -31,7 +31,7 @@ export function BaseController<
   updateDto: Type<TUpdateDto>,
   filter: Type<TFilter>,
 ) {
-  class LocalBaseController {
+  abstract class LocalBaseController {
     constructor(
       protected readonly service: TService,
       protected readonly resourceName: string = 'Data',
@@ -41,7 +41,7 @@ export function BaseController<
     @UsePipes(
       new GenericValidationPipe(ValidationPipeOptions, { body: createDto }),
     )
-    async create(@Body() dto: TCreateDto) {
+    async create(@Body() dto: TCreateDto): Promise<TEntity> {
       return await this.service.create(dto);
     }
 

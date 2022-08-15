@@ -18,9 +18,11 @@ export abstract class BaseService<
   constructor(protected readonly repository: Repository<TEntity>) {}
 
   public async create(dto: TCreateDto): Promise<TEntity>;
-  public async create(dtos: TCreateDto[]): Promise<TEntity>;
+  public async create(dtos: TCreateDto[]): Promise<TEntity[]>;
 
-  public async create(dtoOrDtos: TCreateDto | TCreateDto[]): Promise<TEntity> {
+  public async create(
+    dtoOrDtos: TCreateDto | TCreateDto[],
+  ): Promise<TEntity | TEntity[]> {
     return await this.repository.save(dtoOrDtos as any); // Ignoring method overloads
   }
 
@@ -59,6 +61,31 @@ export abstract class BaseService<
     const result = await this.repository.delete(idOrIds);
 
     return !!result.affected;
+  }
+
+  public async removeReturningAll(id: number): Promise<TEntity>;
+  public async removeReturningAll(ids: number[]): Promise<TEntity[]>;
+
+  public async removeReturningAll(
+    idOrIds: number | number[],
+  ): Promise<TEntity | TEntity[]> {
+    const options: { isSingleId?: boolean } = {};
+
+    if (!Array.isArray(idOrIds)) {
+      idOrIds = [idOrIds];
+      options.isSingleId = true;
+    }
+
+    const result = await this.repository
+      .createQueryBuilder()
+      .delete()
+      .whereInIds(idOrIds)
+      .returning('*')
+      .execute();
+
+    return options.isSingleId
+      ? (result.raw[0] as TEntity)
+      : (result.raw as TEntity[]);
   }
 
   public async findAll(filter: TFilter): Promise<IFindResult<TEntity>> {
