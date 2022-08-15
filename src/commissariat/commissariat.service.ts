@@ -1,25 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { BaseService } from 'src/common/base/service.base';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
-import { IFindResult } from 'src/common/types/find-result.type';
-import { FindOptionsWhere, ILike, Repository } from 'typeorm';
+import {
+  FindManyOptions,
+  FindOptionsRelations,
+  FindOptionsWhere,
+  ILike,
+  Repository,
+} from 'typeorm';
 import { CreateCommissariatDto } from './dto/create-commissariat.dto';
 import { UpdateCommissariatDto } from './dto/update-commissariat.dto';
 import { Commissariat } from './entities/commissariat.entity';
 import { CommissariatFilter } from './types/commissariat-filter.type';
 
 @Injectable()
-export class CommissariatService {
-  @InjectRepository(Commissariat)
-  private readonly commissariatRepository: Repository<Commissariat>;
-
-  async create(createCommissariatDto: CreateCommissariatDto) {
-    return await this.commissariatRepository.save(createCommissariatDto);
+export class CommissariatService extends BaseService<
+  Commissariat,
+  CommissariatFilter,
+  CreateCommissariatDto,
+  UpdateCommissariatDto
+> {
+  constructor(
+    @InjectRepository(Commissariat) repository: Repository<Commissariat>,
+  ) {
+    super(repository);
   }
 
-  async findAll(
+  protected getFiltersConfiguration(
     filters: CommissariatFilter,
-  ): Promise<IFindResult<Commissariat>> {
+  ): FindManyOptions<Commissariat> {
     const where: FindOptionsWhere<Commissariat> = {};
 
     if (filters.name) where.name = ILike(filters.name + '%');
@@ -30,28 +40,9 @@ export class CommissariatService {
     const findOpts = attachPagination<Commissariat>(filters);
     findOpts.where = where;
 
-    const [data, total] = await this.commissariatRepository.findAndCount(
-      findOpts,
-    );
-    return { data, total };
+    return findOpts;
   }
-
-  async findOne(id: number) {
-    return await this.commissariatRepository.findOneBy({ id });
-  }
-
-  async update(id: number, updateCommissariatDto: UpdateCommissariatDto) {
-    const result = await this.commissariatRepository.update(
-      id,
-      updateCommissariatDto,
-    );
-
-    return !!result.affected;
-  }
-
-  async remove(ids: number[]) {
-    const result = await this.commissariatRepository.delete(ids);
-
-    return !!result.affected;
+  protected getRelationsConfiguration(): FindOptionsRelations<Commissariat> {
+    return {};
   }
 }

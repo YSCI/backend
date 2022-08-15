@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { BaseService } from 'src/common/base/service.base';
 import { OrderDirection } from 'src/common/enums/order-direction.enum';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
 import { IFindResult } from 'src/common/types/find-result.type';
 import { RotationFilter } from 'src/common/types/rotation-filter.type';
-import { UpdateDto } from 'src/common/types/update-dto.type';
 import {
   ArrayContains,
   Between,
+  FindManyOptions,
+  FindOptionsRelations,
   FindOptionsWhere,
   ILike,
   In,
@@ -20,19 +22,92 @@ import { Student } from './entities/student.entity';
 import { StudentFilter } from './types/student-filter.type';
 
 @Injectable()
-export class StudentService {
-  @InjectRepository(Student)
-  private readonly studentRepository: Repository<Student>;
-
-  async create(createStudentDto: CreateStudentDto) {
-    return await this.studentRepository.save(createStudentDto);
+export class StudentService extends BaseService<
+  Student,
+  StudentFilter,
+  CreateStudentDto,
+  UpdateStudentDto
+> {
+  constructor(@InjectRepository(Student) repository: Repository<Student>) {
+    super(repository);
   }
 
-  async findAll(
-    filters: Partial<StudentFilter>,
-  ): Promise<IFindResult<Student>> {
-    const where: FindOptionsWhere<Student> = {};
+  async getRotatableStudentsWithRatingsAndTotalCount(
+    filters: RotationFilter,
+    withSubjects = false,
+  ): Promise<IFindResult<Partial<Student>>> {
+    const opts = attachPagination<Student>(filters);
 
+    opts.select = {
+      id: true,
+      firstname: true,
+      lastname: true,
+      fathername: true,
+      groupId: true,
+      educationStatus: true,
+      rates: {
+        id: true,
+        rate: true,
+        semester: true,
+        subject: {
+          id: true,
+          name: true,
+        },
+      },
+    };
+    opts.where = {
+      currentSemester: Not(-1),
+      isFreezed: false,
+      rates: {
+        semester: In(filters.semestersForCalculation),
+      },
+      group: {
+        profession: {
+          id: filters.professionId,
+        },
+      },
+    };
+    opts.order.educationStatus = OrderDirection.DESC;
+    opts.relations = {
+      rates: withSubjects ? { subject: true } : true,
+    };
+
+    const [data, total] = await this.repository.findAndCount(opts);
+    return { data, total };
+  }
+
+  async switchSemesterByGroupIds(groupIds: number[], isPositive = true) {
+    return await this.update(
+      {
+        groupId: In(groupIds),
+        currentSemester: Not(-1),
+        isFreezed: false,
+      },
+      {
+        currentSemester: () => `"currentSemester" ${isPositive ? '+' : '-'} 1`,
+      },
+    );
+  }
+
+  async graduateByGroupIds(groupIds: number[]) {
+    return await this.update(
+      {
+        groupId: In(groupIds),
+        currentSemester: Not(-1),
+        isFreezed: false,
+      },
+      {
+        currentSemester: -1,
+        isFreezed: true,
+      },
+    );
+  }
+
+  protected getFiltersConfiguration(
+    filters: StudentFilter,
+  ): FindManyOptions<Student> {
+    const where: FindOptionsWhere<Student> = {};
+    console.log(filters);
     if (filters.firstname) where.firstname = ILike(filters.firstname + '%');
     if (filters.lastname) where.lastname = ILike(filters.lastname + '%');
     if (filters.fathername) where.fathername = ILike(filters.fathername + '%');
@@ -109,9 +184,12 @@ export class StudentService {
     );
 
     const findOpts = attachPagination<Student>(filters);
-
     findOpts.where = where;
-    findOpts.relations = {
+
+    return findOpts;
+  }
+  protected getRelationsConfiguration(): FindOptionsRelations<Student> {
+    return {
       citizenship: true,
       registrationRegion: true,
       registrationCommunity: true,
@@ -126,123 +204,5 @@ export class StudentService {
       },
       privilege: true,
     };
-
-    const [data, total] = await this.studentRepository.findAndCount(findOpts);
-
-    return { data, total };
-  }
-
-  async getRotatableStudentsWithRatingsAndTotalCount(
-    filters: RotationFilter,
-    withSubjects = false,
-  ): Promise<IFindResult<Partial<Student>>> {
-    const opts = attachPagination<Student>(filters);
-
-    opts.select = {
-      id: true,
-      firstname: true,
-      lastname: true,
-      fathername: true,
-      groupId: true,
-      educationStatus: true,
-      rates: {
-        id: true,
-        rate: true,
-        semester: true,
-        subject: {
-          id: true,
-          name: true,
-        },
-      },
-    };
-    opts.where = {
-      currentSemester: Not(-1),
-      isFreezed: false,
-      rates: {
-        semester: In(filters.semestersForCalculation),
-      },
-      group: {
-        profession: {
-          id: filters.professionId,
-        },
-      },
-    };
-    opts.order.educationStatus = OrderDirection.DESC;
-    opts.relations = {
-      rates: withSubjects ? { subject: true } : true,
-    };
-
-    const [data, total] = await this.studentRepository.findAndCount(opts);
-    return { data, total };
-  }
-
-  async findOne(id: number) {
-    const [student] = await this.studentRepository.find({
-      where: { id },
-      relations: {
-        citizenship: true,
-        registrationRegion: true,
-        registrationCommunity: true,
-        residentCommunity: true,
-        residentRegion: true,
-        nationality: true,
-        healthStatus: true,
-        status: true,
-        commissariat: true,
-        group: {
-          profession: true,
-        },
-        privilege: true,
-      },
-    });
-
-    return student;
-  }
-
-  async update(
-    criteria: number | number[] | FindOptionsWhere<Student>,
-    updateStudentDto: UpdateDto<
-      UpdateStudentDto | { isFreezed?: boolean; hasPension?: boolean }
-    >,
-  ) {
-    const result = await this.studentRepository.update(
-      criteria,
-      updateStudentDto,
-    );
-
-    return !!result.affected;
-  }
-
-  async switchSemesterByGroupIds(groupIds: number[], isPositive = true) {
-    return await this.update(
-      {
-        groupId: In(groupIds),
-        currentSemester: Not(-1),
-        isFreezed: false,
-      },
-      {
-        currentSemester: () => `"currentSemester" ${isPositive ? '+' : '-'} 1`,
-      },
-    );
-  }
-
-  async graduateByGroupIds(groupIds: number[]) {
-    return await this.update(
-      {
-        groupId: In(groupIds),
-        currentSemester: Not(-1),
-        isFreezed: false,
-      },
-      {
-        currentSemester: -1,
-        isFreezed: true,
-      },
-    );
-  }
-
-  async remove(ids: number[]) {
-    const result = await this.studentRepository.delete(ids);
-
-    return !!result.affected;
   }
 }

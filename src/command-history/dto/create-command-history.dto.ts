@@ -1,6 +1,4 @@
 import {
-  ArrayNotEmpty,
-  ArrayUnique,
   IsDate,
   IsInt,
   IsNotEmpty,
@@ -11,16 +9,10 @@ import {
 } from 'class-validator';
 import { UpdateStudentDto } from 'src/student/dto/update-student.dto';
 
-export class AttachCommandDto {
+export class CreateCommandHistoryDto {
   @IsInt()
   @Min(1)
   public commandId: number;
-
-  @ArrayNotEmpty()
-  @ArrayUnique()
-  @IsInt({ each: true })
-  @Min(1, { each: true })
-  public studentIds: number[];
 
   @IsString()
   @IsNotEmpty()
@@ -38,4 +30,7 @@ export class AttachCommandDto {
   @IsString()
   @IsNotEmpty()
   public description: string;
+
+  public userId: number;
+  public studentId: number;
 }

@@ -39,4 +39,7 @@ export class CommandHistory extends BaseEntity {
 
   @Column('jsonb', { nullable: true })
   public changeableColumns: UpdateStudentDto;
+
+  @Column('jsonb', { nullable: true })
+  public changeableColumnsOldValues: UpdateStudentDto;
 }

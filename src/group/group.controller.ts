@@ -2,31 +2,34 @@ import {
   BadRequestException,
   Body,
   Controller,
-  Delete,
-  Get,
   NotFoundException,
-  Param,
   Post,
-  Put,
-  Query,
 } from '@nestjs/common';
-import { BatchDelete } from 'src/common/types/batch-delete.type';
+import { BaseController } from 'src/common/base/controller.base';
 import { IOk } from 'src/common/types/ok.type';
-import { PathParams } from 'src/common/types/path-params.type';
 import { ProfessionService } from 'src/profession/profesion.service';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { GraduationInfoDto } from './dto/graduation-info.dto';
 import { SwitchSemesterDto } from './dto/switch-course.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
+import { Group } from './entities/group.entity';
 import { GroupService } from './group.service';
 import { GroupFilter } from './types/group-filter.type';
 
 @Controller('group')
-export class GroupController {
+export class GroupController extends BaseController<
+  Group,
+  GroupFilter,
+  CreateGroupDto,
+  UpdateGroupDto,
+  GroupService
+>(CreateGroupDto, UpdateGroupDto, GroupFilter) {
   constructor(
-    private readonly groupService: GroupService,
+    service: GroupService,
     private readonly professionService: ProfessionService,
-  ) {}
+  ) {
+    super(service, Group.name);
+  }
 
   @Post()
   async create(@Body() createGroupDto: CreateGroupDto) {
@@ -38,59 +41,19 @@ export class GroupController {
       throw new NotFoundException('Depended resource does not exists');
     }
 
-    return await this.groupService.create(createGroupDto, {
-      freePlacesCount: profession.freePlacesCount,
-      fee: profession.fee,
-    });
-  }
-
-  @Get()
-  async findAll(@Query() filters: GroupFilter) {
-    return await this.groupService.findAll(filters);
-  }
-
-  @Get(':id')
-  async findOne(@Param() { id }: PathParams) {
-    const group = await this.groupService.findOne(id);
-
-    if (!group) {
-      throw new NotFoundException('Group not found');
-    }
-
-    return group;
-  }
-
-  @Put(':id')
-  async update(
-    @Param() { id }: PathParams,
-    @Body() updateGroupDto: UpdateGroupDto,
-  ): Promise<IOk> {
-    const result = await this.groupService.update(id, updateGroupDto);
-
-    if (!result) {
-      throw new NotFoundException('Group not found');
-    }
-
-    return { ok: true };
-  }
-
-  @Delete()
-  async remove(@Query() { ids }: BatchDelete): Promise<IOk> {
-    const result = await this.groupService.remove(ids);
-
-    if (!result) {
-      throw new NotFoundException('Group not found');
-    }
-
-    return { ok: true };
+    return await super.create(
+      Object.assign(createGroupDto, {
+        freePlacesCount: profession.freePlacesCount,
+        fee: profession.fee,
+      }),
+    );
   }
 
   @Post('switchSemester')
   async switchSemester(
     @Body() { groupIds, isPositive }: SwitchSemesterDto,
   ): Promise<IOk> {
-    const groups = await this.groupService.findByIds(groupIds);
-
+    const groups = await this.service.findByIds(groupIds);
     if (!groups.length) {
       throw new NotFoundException('Group(s) not found');
     } else if (
@@ -103,14 +66,14 @@ export class GroupController {
       );
     }
 
-    await this.groupService.switchSemester(groupIds, isPositive);
+    await this.service.switchSemester(groupIds, isPositive);
 
     return { ok: true };
   }
 
   @Post('graduate')
   async graduate(@Body() { groupIds }: GraduationInfoDto) {
-    const result = await this.groupService.graduate(groupIds);
+    const result = await this.service.graduate(groupIds);
 
     return { ok: result };
   }

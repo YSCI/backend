@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { ValidationPipeOptions } from './common/options/validation-pipe.options';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -10,15 +11,7 @@ async function bootstrap() {
     },
   });
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      transform: true,
-      transformOptions: {
-        enableImplicitConversion: true,
-      },
-    }),
-  );
+  app.useGlobalPipes(new ValidationPipe(ValidationPipeOptions));
   app.setGlobalPrefix('api');
 
   await app.listen(process.env.HTTP_PORT);

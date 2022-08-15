@@ -26,4 +26,7 @@ export class CreateGroupDto {
   @IsInt()
   @IsPositive()
   public openedAt: number = new Date().getFullYear();
+
+  public freePlacesCount: number;
+  public fee: string;
 }
