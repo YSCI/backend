@@ -107,7 +107,7 @@ export class StudentService extends BaseService<
     filters: StudentFilter,
   ): FindManyOptions<Student> {
     const where: FindOptionsWhere<Student> = {};
-    console.log(filters);
+
     if (filters.firstname) where.firstname = ILike(filters.firstname + '%');
     if (filters.lastname) where.lastname = ILike(filters.lastname + '%');
     if (filters.fathername) where.fathername = ILike(filters.fathername + '%');
