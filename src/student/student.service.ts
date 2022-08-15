@@ -178,10 +178,12 @@ export class StudentService extends BaseService<
         filters.passportDateOfIssueEnd,
       );
     }
-    where.passportDateOfIssue = Between(
-      filters.passportDateOfIssueStart,
-      filters.passportDateOfIssueEnd,
-    );
+    if (filters.passportDateOfIssueStart && filters.passportDateOfIssueEnd) {
+      where.passportDateOfIssue = Between(
+        filters.passportDateOfIssueStart,
+        filters.passportDateOfIssueEnd,
+      );
+    }
 
     const findOpts = attachPagination<Student>(filters);
     findOpts.where = where;
