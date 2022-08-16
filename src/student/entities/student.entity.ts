@@ -81,7 +81,7 @@ export class Student extends BaseEntity {
   @Column({ nullable: true })
   public passportType: PassportType;
 
-  @Column({ unique: true })
+  @Column('bigint', { unique: true })
   public socialCardNumber: number;
 
   @Column('varchar', { array: true })
