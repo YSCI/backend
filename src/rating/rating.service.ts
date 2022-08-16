@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/base/service.base';
-import { attachPagination } from 'src/common/helpers/pagination.helper';
 import {
   FindManyOptions,
   FindOptionsRelations,
@@ -51,7 +50,7 @@ export class RatingService extends BaseService<
     if (filters.semester) where.semester = filters.semester;
     if (filters.rate) where.rate = filters.rate;
 
-    const findOpts = attachPagination<Rating>(filters);
+    const findOpts: FindManyOptions<Rating> = {};
     findOpts.where = where;
 
     return findOpts;

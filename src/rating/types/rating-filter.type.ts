@@ -1,7 +1,6 @@
 import { IsInt, IsOptional, Min } from 'class-validator';
-import { Pagination } from 'src/common/types/pagination.type';
 
-export class RatingFilter extends Pagination {
+export class RatingFilter {
   @IsOptional()
   @IsInt()
   @Min(1)
