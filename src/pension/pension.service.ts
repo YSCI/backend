@@ -19,7 +19,6 @@ export class PensionService {
     const { data, total } =
       await this.studentService.getRotatableStudentsWithRatingsAndTotalCount(
         filters,
-        true,
       );
 
     if (!data.length) {

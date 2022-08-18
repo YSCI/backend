@@ -1,4 +1,6 @@
 import {
+  ArrayNotEmpty,
+  ArrayUnique,
   IsInt,
   IsNotEmpty,
   IsNumber,
@@ -12,19 +14,21 @@ export class SubjectFilter extends Pagination {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  public name: string;
+  public name?: string;
 
   @IsOptional()
   @IsInt()
   @Min(1)
-  public professionId: number;
+  public professionId?: number;
 
   @IsOptional()
-  @IsInt()
-  @Min(1)
-  public semester: number;
+  @ArrayNotEmpty()
+  @ArrayUnique()
+  @IsInt({ each: true })
+  @Min(1, { each: true })
+  public semesters?: Array<number>;
 
   @IsOptional()
   @IsNumber()
-  public number: number;
+  public number?: number;
 }

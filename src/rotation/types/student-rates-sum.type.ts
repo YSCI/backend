@@ -1,4 +1,4 @@
-export class StudentRatesSum {
-  public semesters: { [x: number]: number };
-  public total: number;
+export interface StudentRatesSum {
+  semesters: { [x: number]: number };
+  total: number;
 }

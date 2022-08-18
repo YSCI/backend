@@ -34,27 +34,9 @@ export class StudentService extends BaseService<
 
   async getRotatableStudentsWithRatingsAndTotalCount(
     filters: RotationFilter,
-    withSubjects = false,
   ): Promise<IFindResult<Partial<Student>>> {
-    const opts = attachPagination<Student>(filters);
+    const opts = !filters.export ? attachPagination<Student>(filters) : {};
 
-    opts.select = {
-      id: true,
-      firstname: true,
-      lastname: true,
-      fathername: true,
-      groupId: true,
-      educationStatus: true,
-      rates: {
-        id: true,
-        rate: true,
-        semester: true,
-        subject: {
-          id: true,
-          name: true,
-        },
-      },
-    };
     opts.where = {
       currentSemester: Not(-1),
       isFreezed: false,
@@ -67,9 +49,12 @@ export class StudentService extends BaseService<
         },
       },
     };
-    opts.order.educationStatus = OrderDirection.DESC;
+    opts.order = { ...opts.order, educationStatus: OrderDirection.DESC };
     opts.relations = {
-      rates: withSubjects ? { subject: true } : true,
+      rates: true,
+      group: {
+        profession: true,
+      },
     };
 
     const [data, total] = await this.repository.findAndCount(opts);

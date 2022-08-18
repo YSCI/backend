@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/base/service.base';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
 import {
+  ArrayContainedBy,
   ArrayContains,
   FindManyOptions,
   FindOptionsRelations,
@@ -33,7 +34,8 @@ export class SubjectService extends BaseService<
 
     if (filters.name) where.name = ILike(filters.name + '%');
     if (filters.professionId) where.professionId = filters.professionId;
-    if (filters.semester) where.semesters = ArrayContains([filters.semester]);
+    if (filters.semesters)
+      where.semesters = ArrayContainedBy(filters.semesters);
     if (filters.number) where.number = filters.number;
 
     const findOpts = attachPagination<Subject>(filters);

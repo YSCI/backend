@@ -1,5 +1,12 @@
 import { Type } from 'class-transformer';
-import { ArrayNotEmpty, ArrayUnique, IsInt, Min } from 'class-validator';
+import {
+  ArrayNotEmpty,
+  ArrayUnique,
+  IsBoolean,
+  IsInt,
+  IsOptional,
+  Min,
+} from 'class-validator';
 import { Pagination } from 'src/common/types/pagination.type';
 
 export class RotationFilter extends Pagination {
@@ -20,4 +27,8 @@ export class RotationFilter extends Pagination {
   @IsInt({ each: true })
   @Min(1, { each: true })
   public semestersForCalculation: Array<number>;
+
+  @IsOptional()
+  @IsBoolean()
+  public export: boolean;
 }
