@@ -9,20 +9,26 @@ import { GroupService } from 'src/group/group.service';
 import { StudentService } from 'src/student/student.service';
 import { In, Not } from 'typeorm';
 import { RotationAdditionalData } from './dto/rotation-additional-data.dto';
-// import { StudentRotationDto } from './dto/student-rotation-info.dto';
 import { RotationFilter } from '../common/types/rotation-filter.type';
 import { StudentRotationInfo } from './types/student-rotation-info.type';
+import { generateReport } from 'src/common/templates/report-template';
+import { SubjectService } from 'src/subject/subject.service';
+import { DateHelpers } from 'src/common/helpers/date.helper';
+import { ReportType } from 'src/common/types/report.type';
 
 @Injectable()
 export class RotationService {
   constructor(
     private readonly studentService: StudentService,
     private readonly groupService: GroupService,
+    private readonly subjectService: SubjectService,
   ) {}
 
   async findAllAndCalculateRatesSum(
     filters: RotationFilter,
-  ): Promise<IFindResult<StudentRotationInfo, RotationAdditionalData>> {
+  ): Promise<
+    IFindResult<StudentRotationInfo, RotationAdditionalData> | ArrayBuffer
+  > {
     const { data: students, total } =
       await this.studentService.getRotatableStudentsWithRatingsAndTotalCount(
         filters,
@@ -47,7 +53,8 @@ export class RotationService {
         firstname: student.firstname,
         lastname: student.lastname,
         educationStatus: student.educationStatus,
-        rates: {
+        ...{ rates: filters.export ? student.rates : undefined },
+        ratesSum: {
           semesters,
           total,
         },
@@ -56,14 +63,33 @@ export class RotationService {
 
     mappedStudents.sort((left, right) =>
       left.educationStatus === right.educationStatus
-        ? right.rates.total - left.rates.total
+        ? right.ratesSum.total - left.ratesSum.total
         : 1,
     );
 
-    const { freePlacesCount } = await this.groupService.findOne(
-      students[0].groupId,
-    );
-    return { data: mappedStudents, additional: { freePlacesCount }, total };
+    if (filters.export) {
+      const subjects = await this.subjectService.findAll({
+        professionId: filters.professionId,
+        semesters: filters.semestersForCalculation,
+        limit: 0,
+      });
+      const professionCode = students[0].group.profession.code;
+      const academicYears = DateHelpers.getCurrentAcademicYear();
+
+      return await generateReport(
+        students,
+        subjects.data,
+        professionCode,
+        academicYears,
+        filters.semestersForCalculation,
+        ReportType.Rotation,
+      );
+    } else {
+      const { freePlacesCount } = await this.groupService.findOne(
+        students[0].groupId,
+      );
+      return { data: mappedStudents, additional: { freePlacesCount }, total };
+    }
   }
 
   async rotate(studentIds: Array<number>) {
