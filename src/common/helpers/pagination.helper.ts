@@ -17,8 +17,8 @@ export function detachPagination<T>(
   findManyOptions: FindManyOptions<T>,
   opts?: { ignoreOrder: boolean },
 ) {
-  findManyOptions.skip;
-  findManyOptions.take;
+  delete findManyOptions.skip;
+  delete findManyOptions.take;
 
   if (!opts?.ignoreOrder) {
     delete findManyOptions.order;

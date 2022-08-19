@@ -74,7 +74,7 @@ export class ExcelHelpers {
     for (const item of data) {
       const temp = [];
       for (const column of columns) {
-        temp.push(_.get(item, column.key));
+        temp.push(_.get(item, column.key).toString() || '—');
       }
 
       result.push(temp);
