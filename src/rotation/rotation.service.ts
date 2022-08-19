@@ -68,17 +68,22 @@ export class RotationService {
     );
 
     if (filters.export) {
-      const subjects = await this.subjectService.findAll({
-        professionId: filters.professionId,
-        semesters: filters.semestersForCalculation,
-        limit: 0,
-      });
+      const subjects = await this.subjectService.findAll(
+        {
+          professionId: filters.professionId,
+          semesters: filters.semestersForCalculation,
+          limit: 0,
+        },
+        false,
+      );
       const professionCode = students[0].group.profession.code;
       const academicYears = DateHelpers.getCurrentAcademicYear();
 
       return await generateReport(
         students,
-        subjects.data,
+        subjects.sort(
+          (a, b) => a.number.toString().length - b.number.toString().length,
+        ),
         professionCode,
         academicYears,
         filters.semestersForCalculation,

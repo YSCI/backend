@@ -7,14 +7,17 @@ import {
   Post,
   Put,
   Query,
+  Res,
   Type,
   UsePipes,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { DeepPartial } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { BaseEntity } from '../entities/base.entity';
 import { ValidationPipeOptions } from '../options/validation-pipe.options';
 import { BatchDelete } from '../types/batch-delete.type';
+import { IFindResult } from '../types/find-result.type';
 import { GenericValidationPipe } from '../types/generic-validation-pipe.type';
 import { IOk } from '../types/ok.type';
 import { PathParams } from '../types/path-params.type';
@@ -49,7 +52,11 @@ export function BaseController<
     @UsePipes(
       new GenericValidationPipe(ValidationPipeOptions, { query: filter }),
     )
-    async findAll(@Query() filters: TFilter) {
+    async findAll(
+      @Query() filters: TFilter,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      @Res({ passthrough: true }) res: Response,
+    ): Promise<IFindResult<TEntity, any> | void> {
       return await this.service.findAll(filters);
     }
 

@@ -9,12 +9,16 @@ import {
   IsString,
   MaxLength,
   Min,
+  ValidateIf,
+  ValidateNested,
 } from 'class-validator';
 import { EducationBasis } from 'src/common/enums/education-basis.enum';
 import { EducationStatus } from 'src/common/enums/education-status.enum';
 import { Gender } from 'src/common/enums/gender.enum';
 import { PassportType } from 'src/common/enums/passport-type.enum';
+import { PropertyHelpers } from 'src/common/helpers/property.helper';
 import { Pagination } from 'src/common/types/pagination.type';
+import { ExportColumnsDto } from '../../common/dto/export-columns.dto';
 
 export class StudentFilter extends Pagination {
   @IsOptional()
@@ -205,4 +209,14 @@ export class StudentFilter extends Pagination {
   @IsOptional()
   @IsDate()
   public privilegeExpirationDate: Date;
+
+  @IsOptional()
+  @IsBoolean()
+  public export: boolean;
+
+  @IsOptional()
+  @ValidateIf((obj) => !PropertyHelpers.isNullOrUndefined(obj.export))
+  @ArrayNotEmpty()
+  @ValidateNested({ each: true })
+  public exportColumns: Array<ExportColumnsDto>;
 }

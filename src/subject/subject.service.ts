@@ -4,7 +4,6 @@ import { BaseService } from 'src/common/base/service.base';
 import { attachPagination } from 'src/common/helpers/pagination.helper';
 import {
   ArrayContainedBy,
-  ArrayContains,
   FindManyOptions,
   FindOptionsRelations,
   FindOptionsWhere,
