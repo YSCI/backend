@@ -5,6 +5,7 @@ import { StudentRotationDto } from './dto/student-rotation.dto';
 import { RotationFilter } from '../common/types/rotation-filter.type';
 import { DateTime } from 'luxon';
 import { Response } from 'express';
+import { ResponseHelpers } from 'src/common/helpers/response.helper';
 
 @Controller('rotation')
 export class RotationController {
@@ -23,18 +24,12 @@ export class RotationController {
     );
 
     if (filters.export) {
-      res.setHeader(
-        'Content-Type',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      );
-      res.setHeader(
-        'Content-Disposition',
-        'attachment; filename=' +
-          `rotation-report-${DateTime.now().toFormat('dd-MM-yyyy')}.xlsx`,
-      );
-      res.send(data);
-    } else {
-      res.json(data);
+      const outputFileName = `rotation_report_${DateTime.now().toFormat(
+        'dd-MM-yyyy_HH:mm:ss',
+      )}.xlsx`;
+      ResponseHelpers.setHeadersForExcelReport(res, outputFileName);
     }
+
+    res.send(data);
   }
 }

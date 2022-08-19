@@ -1,8 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { TableColumnProperties, Workbook } from 'exceljs';
 import { BaseService } from 'src/common/base/service.base';
 import { OrderDirection } from 'src/common/enums/order-direction.enum';
-import { attachPagination } from 'src/common/helpers/pagination.helper';
+import { ExcelHelpers } from 'src/common/helpers/excel.helper';
+import {
+  attachPagination,
+  detachPagination,
+} from 'src/common/helpers/pagination.helper';
 import { IFindResult } from 'src/common/types/find-result.type';
 import { RotationFilter } from 'src/common/types/rotation-filter.type';
 import {
@@ -17,6 +22,7 @@ import {
   Repository,
 } from 'typeorm';
 import { CreateStudentDto } from './dto/create-student.dto';
+import { ExportColumnsDto } from '../common/dto/export-columns.dto';
 import { UpdateStudentDto } from './dto/update-student.dto';
 import { Student } from './entities/student.entity';
 import { StudentFilter } from './types/student-filter.type';
@@ -35,7 +41,8 @@ export class StudentService extends BaseService<
   async getRotatableStudentsWithRatingsAndTotalCount(
     filters: RotationFilter,
   ): Promise<IFindResult<Partial<Student>>> {
-    const opts = !filters.export ? attachPagination<Student>(filters) : {};
+    const opts = attachPagination<Student>(filters);
+    if (filters.export) detachPagination(opts, { ignoreOrder: true });
 
     opts.where = {
       currentSemester: Not(-1),
@@ -49,7 +56,7 @@ export class StudentService extends BaseService<
         },
       },
     };
-    opts.order = { ...opts.order, educationStatus: OrderDirection.DESC };
+    opts.order.educationStatus = OrderDirection.DESC;
     opts.relations = {
       rates: true,
       group: {
@@ -86,6 +93,35 @@ export class StudentService extends BaseService<
         isFreezed: true,
       },
     );
+  }
+
+  public async convertToExcelFile(
+    students: Array<Student>,
+    columns: Array<ExportColumnsDto>,
+  ) {
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet(Student.name);
+
+    const table = worksheet.addTable({
+      name: Student.name,
+      ref: 'A1',
+      headerRow: true,
+      style: {
+        theme: 'TableStyleMedium1',
+      },
+      columns: [
+        ...columns.map<TableColumnProperties>((column) => ({
+          name: column.name,
+        })),
+      ],
+      rows: ExcelHelpers.parseDeepDataToRows(students, columns),
+    });
+    table.commit();
+
+    ExcelHelpers.autoFitColumns(worksheet.columns);
+    ExcelHelpers.setColumnsAlignment(worksheet.columns, 'center');
+
+    return await workbook.xlsx.writeBuffer();
   }
 
   protected getFiltersConfiguration(
@@ -172,6 +208,8 @@ export class StudentService extends BaseService<
 
     const findOpts = attachPagination<Student>(filters);
     findOpts.where = where;
+
+    if (filters.export) detachPagination(findOpts, { ignoreOrder: true });
 
     return findOpts;
   }

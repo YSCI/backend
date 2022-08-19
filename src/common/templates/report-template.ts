@@ -1,24 +1,9 @@
-import { Workbook, Alignment, Borders } from 'exceljs';
+import { Workbook } from 'exceljs';
 import { toRoman } from 'roman-numerals';
 import { Student } from 'src/student/entities/student.entity';
 import { Subject } from 'src/subject/entities/subject.entity';
+import { ExcelHelpers } from '../helpers/excel.helper';
 import { ReportType } from '../types/report.type';
-
-const border: Partial<Borders> = {
-  top: { style: 'thin' },
-  left: { style: 'thin' },
-  bottom: { style: 'thin' },
-  right: { style: 'thin' },
-};
-
-const alignmentCenter: Partial<Alignment> = {
-  vertical: 'middle',
-  horizontal: 'center',
-};
-const alignmentLeft: Partial<Alignment> = {
-  vertical: 'middle',
-  horizontal: 'left',
-};
 
 const headerRow = 1;
 const startColumn = 1;
@@ -38,10 +23,10 @@ export const generateReport = async (
 
   const groupNumbers = students.map((student) => student.group.number);
   const header = worksheet.getCell(headerRow, startColumn);
-  header.alignment = alignmentCenter;
   header.value = ` ${professionCode},     ${groupNumbers} խմբեր ${academicYears.join(
     '-',
   )} ուս. տարվա ${type === ReportType.Pension ? 'կրթաթոշակ' : 'ռոտացիա'}`;
+  ExcelHelpers.setCellAlignment(header, 'center');
 
   let step = 0;
 
@@ -59,16 +44,16 @@ export const generateReport = async (
 
   const a3 = worksheet.getCell(startRow, startColumn);
   a3.value = '№';
-  a3.alignment = alignmentCenter;
-  a3.border = border;
+  ExcelHelpers.setCellAlignment(a3, 'center');
+  ExcelHelpers.setCellBorders(a3);
 
   const b3 = worksheet.getCell(startRow, startColumn + 1);
-  b3.border = border;
+  ExcelHelpers.setCellBorders(b3);
 
   const c3 = worksheet.getCell(startRow, startColumn + 2);
   c3.value = 'Ուսանողի ազգանունը, անունը, հայրանունը';
-  c3.alignment = alignmentCenter;
-  c3.border = border;
+  ExcelHelpers.setCellAlignment(c3, 'center');
+  ExcelHelpers.setCellBorders(c3);
 
   let count = 0;
   let currentTitleCellColumnIdx = 0;
@@ -79,7 +64,7 @@ export const generateReport = async (
     for (let j = 0; j < groupedBySemestersSubjects[i].length; j++) {
       const cell = worksheet.getCell(startRow, startColumn + step + count);
       cell.value = groupedBySemestersSubjects[i][j].name;
-      cell.border = border;
+      ExcelHelpers.setCellBorders(cell);
 
       const column = worksheet.getColumn(startColumn + step + count);
       column.alignment = { textRotation: 90, horizontal: 'left' };
@@ -98,9 +83,9 @@ export const generateReport = async (
       startRow - 1,
       startColumn + step + count - 1,
     ]);
-    title.alignment = alignmentCenter;
     title.value = `Առարկաներ ${toRoman(i + 1)} կիսամյակ`;
-    title.border = border;
+    ExcelHelpers.setCellAlignment(title, 'center');
+    ExcelHelpers.setCellBorders(title);
 
     currentTitleCellColumnIdx = count;
   }
@@ -114,40 +99,40 @@ export const generateReport = async (
   for (let i = 0; i < students.length; i++) {
     const indexCell = worksheet.getCell(startRow + i + 1, startColumn + step++);
     indexCell.value = i + 1;
-    indexCell.alignment = alignmentCenter;
-    indexCell.border = border;
+    ExcelHelpers.setCellAlignment(indexCell, 'center');
+    ExcelHelpers.setCellBorders(indexCell);
 
     const groupNumberCell = worksheet.getCell(
       startRow + i + 1,
       startColumn + step++,
     );
     groupNumberCell.value = students[i].group.number;
-    groupNumberCell.alignment = alignmentCenter;
-    groupNumberCell.border = border;
+    ExcelHelpers.setCellAlignment(groupNumberCell, 'center');
+    ExcelHelpers.setCellBorders(groupNumberCell);
 
     const firstnameCell = worksheet.getCell(
       startRow + i + 1,
       startColumn + step++,
     );
     firstnameCell.value = students[i].firstname;
-    firstnameCell.alignment = alignmentLeft;
-    firstnameCell.border = border;
+    ExcelHelpers.setCellAlignment(firstnameCell, 'left');
+    ExcelHelpers.setCellBorders(firstnameCell);
 
     const lastnameCell = worksheet.getCell(
       startRow + i + 1,
       startColumn + step++,
     );
     lastnameCell.value = students[i].lastname;
-    lastnameCell.alignment = alignmentLeft;
-    lastnameCell.border = border;
+    ExcelHelpers.setCellAlignment(lastnameCell, 'left');
+    ExcelHelpers.setCellBorders(lastnameCell);
 
     const fathernameCell = worksheet.getCell(
       startRow + i + 1,
       startColumn + step++,
     );
     fathernameCell.value = students[i].fathername;
-    fathernameCell.alignment = alignmentLeft;
-    fathernameCell.border = border;
+    ExcelHelpers.setCellAlignment(fathernameCell, 'left');
+    ExcelHelpers.setCellBorders(fathernameCell);
 
     step = 0;
   }
@@ -168,8 +153,8 @@ export const generateReport = async (
         ratingsDataStartColumnIndex + j,
       );
       cell.value = reducedStudents[i].rates[allSubjects[j].id] ?? '—';
-      cell.alignment = alignmentCenter;
-      cell.border = border;
+      ExcelHelpers.setCellAlignment(cell, 'center');
+      ExcelHelpers.setCellBorders(cell);
     }
   }
 

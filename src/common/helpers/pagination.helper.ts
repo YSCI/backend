@@ -12,3 +12,15 @@ export function attachPagination<T>(opts: Pagination): FindManyOptions<T> {
 
   return conditions;
 }
+
+export function detachPagination<T>(
+  findManyOptions: FindManyOptions<T>,
+  opts?: { ignoreOrder: boolean },
+) {
+  findManyOptions.skip;
+  findManyOptions.take;
+
+  if (!opts?.ignoreOrder) {
+    delete findManyOptions.order;
+  }
+}

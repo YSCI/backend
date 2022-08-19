@@ -88,12 +88,21 @@ export abstract class BaseService<
       : (result.raw as TEntity[]);
   }
 
-  public async findAll(filter: TFilter): Promise<IFindResult<TEntity>> {
+  public async findAll(filter: TFilter): Promise<IFindResult<TEntity>>;
+  public async findAll(filter: TFilter, withCount: false): Promise<TEntity[]>;
+
+  public async findAll(
+    filter: TFilter,
+    withCount = true,
+  ): Promise<IFindResult<TEntity> | TEntity[]> {
     const filters = this.getFiltersConfiguration(filter);
     filters.relations = this.getRelationsConfiguration();
 
-    const [data, total] = await this.repository.findAndCount(filters);
+    if (!withCount) {
+      return await this.repository.find(filters);
+    }
 
+    const [data, total] = await this.repository.findAndCount(filters);
     return { data, total };
   }
 
