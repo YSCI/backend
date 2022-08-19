@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { DateTime } from 'luxon';
 import { BaseController } from 'src/common/base/controller.base';
@@ -21,8 +21,10 @@ export class StudentController extends BaseController<
     super(service, Student.name);
   }
 
-  @Get('')
-  async findAll(@Query() filters: StudentFilter, res: Response) {
+  @Get()
+  async findAll(@Query() filters: StudentFilter, @Res() res: Response) {
+    console.log('child', this.resourceName);
+
     if (filters.export) {
       const data = await this.service.findAll(filters, false);
 
@@ -40,7 +42,6 @@ export class StudentController extends BaseController<
       return;
     }
 
-    const data = await this.service.findAll(filters);
-    res.send(data);
+    return await this.service.findAll(filters);
   }
 }
