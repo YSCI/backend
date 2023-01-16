@@ -40,7 +40,7 @@
     "passport-local": "^1.0.0",
     "pg": "^8.7.3",
     "reflect-metadata": "^0.1.13",
-    "rimraf": "^3.0.2",
+    "rimraf": "^4.0.7",
     "roman-numerals": "^0.3.2",
     "rxjs": "^7.5.5",
     "typeorm": "0.3.10"
