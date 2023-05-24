@@ -1,6 +1,7 @@
 import {
   ArrayNotEmpty,
   ArrayUnique,
+  IsEnum,
   IsInt,
   IsNotEmpty,
   IsNumber,
@@ -8,6 +9,7 @@ import {
   IsString,
   Min,
 } from 'class-validator';
+import { PointSystem } from 'src/common/enums/point-system.enum';
 import { Pagination } from 'src/common/types/pagination.type';
 
 export class SubjectFilter extends Pagination {
@@ -31,4 +33,8 @@ export class SubjectFilter extends Pagination {
   @IsOptional()
   @IsNumber()
   public number?: number;
+
+  @IsOptional()
+  @IsEnum(PointSystem)
+  public pointSystem?: PointSystem;
 }

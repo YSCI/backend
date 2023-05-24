@@ -36,6 +36,7 @@ export class SubjectService extends BaseService<
     if (filters.semesters)
       where.semesters = ArrayContainedBy(filters.semesters);
     if (filters.number) where.number = filters.number;
+    if (filters.pointSystem) where.pointSystem = filters.pointSystem;
 
     const findOpts = attachPagination<Subject>(filters);
     findOpts.where = where;

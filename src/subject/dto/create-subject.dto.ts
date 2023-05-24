@@ -1,5 +1,6 @@
 import {
   ArrayNotEmpty,
+  IsEnum,
   IsInt,
   IsNotEmpty,
   IsNumber,
@@ -7,6 +8,7 @@ import {
   IsString,
   Min,
 } from 'class-validator';
+import { PointSystem } from 'src/common/enums/point-system.enum';
 
 export class CreateSubjectDto {
   @IsString()
@@ -25,4 +27,8 @@ export class CreateSubjectDto {
 
   @IsNumber()
   public number: number;
+
+  @IsEnum(PointSystem)
+  @IsOptional()
+  public pointSystem: PointSystem = PointSystem.Ten;
 }

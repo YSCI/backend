@@ -95,7 +95,7 @@ export class StudentService extends BaseService<
     );
   }
 
-  public async convertToExcelFile(
+  public convertToExcelFile(
     students: Array<Student>,
     columns: Array<ExportColumnsDto>,
   ) {
@@ -121,14 +121,14 @@ export class StudentService extends BaseService<
     ExcelHelpers.autoFitColumns(worksheet.columns);
     ExcelHelpers.setColumnsAlignment(worksheet.columns, 'center');
 
-    return await workbook.xlsx.writeBuffer();
+    return workbook.xlsx.writeBuffer();
   }
 
   protected getFiltersConfiguration(
     filters: StudentFilter,
   ): FindManyOptions<Student> {
     const where: FindOptionsWhere<Student> = {};
-
+  
     if (filters.firstname) where.firstname = ILike(filters.firstname + '%');
     if (filters.lastname) where.lastname = ILike(filters.lastname + '%');
     if (filters.fathername) where.fathername = ILike(filters.fathername + '%');

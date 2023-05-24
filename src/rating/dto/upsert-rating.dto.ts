@@ -20,6 +20,5 @@ export class UpsertRatingDto {
 
   @IsInt()
   @Min(1)
-  @Max(10)
   public rate: number;
 }

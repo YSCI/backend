@@ -23,8 +23,6 @@ export class StudentController extends BaseController<
 
   @Get()
   async findAll(@Query() filters: StudentFilter, @Res() res: Response) {
-    console.log('child', this.resourceName);
-
     if (filters.export) {
       const data = await this.service.findAll(filters, false);
 
