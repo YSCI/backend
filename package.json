@@ -43,7 +43,7 @@
     "rimraf": "^5.0.1",
     "roman-numerals": "^0.3.2",
     "rxjs": "^7.5.5",
-    "typeorm": "0.3.16"
+    "typeorm": "0.3.17"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
