@@ -19,7 +19,7 @@
     "addmig": "node cli/add-migration.js"
   },
   "dependencies": {
-    "@nestjs/common": "^8.4.4",
+    "@nestjs/common": "^10.0.3",
     "@nestjs/config": "^2.0.0",
     "@nestjs/core": "^8.4.4",
     "@nestjs/jwt": "^10.0.2",
